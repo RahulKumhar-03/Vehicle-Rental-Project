@@ -9,8 +9,11 @@ from config.database import user_collection
 # from config.database import blacklist_tokens_collection
 from bson import ObjectId
 from datetime import datetime, timedelta
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-router = APIRouter(prefix='/auth', tags=['auth'])
+router = APIRouter()
+
+security = HTTPBearer()
 
 oauth2 = OAuth2PasswordBearer(tokenUrl='auth/login')
 
@@ -26,21 +29,27 @@ def create_jwt_token(data: dict):
     to_encode.update({"exp":expire})
     return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.algorithm)
 
-async def get_current_user(token: str = Depends(oauth2)):
+async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
+
+    token = credentials.credentials
+
+    try:
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.algorithm])
+        user_id = payload.get("sub")
+        user = await user_collection.find_one({"_id": ObjectId(user_id)})
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid token")
+        
+        user_dict = {**user, "id": str(user["_id"])}
+        return User(**user_dict)
+    except jwt.PyJWTError:
+        raise HTTPException(status_code=401, detail="Invalid token")
     '''
     blacklisted = await blacklist_tokens_collection.find_one({"token":token})
     if blacklisted:
         raise HTTPException(status_code=401, detail="Token has been blacklisted")
     '''
-    try:
-        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.algorithm])
-        user_id = payload.get('sub')
-        user = user_collection.find_one({"_id": ObjectId(user_id)})
-        if not user:
-            raise HTTPException(status_code=401, details="Invalid Token")
-        return User(**{**user, "id": str(user["_id"])})
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, details="Invalid Token")
+    
     
 @router.post("/register", response_model=User)
 async def registerUser(user: UserCreate):
@@ -63,7 +72,6 @@ async def loginUser(email: str, password:str):
     token = create_jwt_token(data={"sub": str(user["_id"])})
     return {"access_token": token, "token_type": "bearer"}
 
-from fastapi import Request, Query
 
 '''
 @router.post("/logout")
