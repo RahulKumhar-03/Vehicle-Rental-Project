@@ -30,9 +30,7 @@ def create_jwt_token(data: dict):
     return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.algorithm)
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
-
     token = credentials.credentials
-
     try:
         payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.algorithm])
         user_id = payload.get("sub")
@@ -52,17 +50,39 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     
     
 @router.post("/register", response_model=User)
-async def registerUser(user: UserCreate):
+async def register_user(user: UserCreate):
     existing_user = await user_collection.find_one({"email":user.email})
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered! Please login.")
     hashed_password = hashing_pwd(user.password)
     user_dict = user.dict()
     user_dict["password"] = hashed_password
+    user_dict["role"] = "customer"
     user_dict["created_at"] = datetime.utcnow()
     new_user = await user_collection.insert_one(user_dict)
     user_dict["id"] = str(new_user.inserted_id)
     return User(**user_dict)
+
+@router.post("/register-admin", response_model=User)
+async def register_admin(user: UserCreate):
+    existing_admin = await user_collection.find_one({"role": "admin"})
+    if existing_admin:
+        raise HTTPException(status_code = 400, detail="Admin already exists! Please Login")
+    
+    existing_user = await user_collection.find_one({"email": user.email})
+    if existing_user:
+        raise HTTPException(status_code=400, detail="Email already registered! Please login.")
+    
+    hashed_password = hashing_pwd(user.password)
+
+    user_dict = user.dict()
+    user_dict["password"] = hashed_password
+    user_dict["role"] = "admin"
+    user_dict["created_at"] = datetime.utcnow()
+
+    result = await user_collection.insert_one(user_dict)
+    user_dict["id"] = str(result.inserted_id)
+    return  User(**user_dict)
 
 @router.post("/login")
 async def loginUser(email: str, password:str):
