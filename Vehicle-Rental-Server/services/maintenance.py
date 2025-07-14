@@ -6,7 +6,7 @@ from typing import List
 from datetime import datetime, timedelta
 
 async def maintenance_check_alerts() -> List[Vehicle]:
-    threshold_date = datetime.utcnow() - timedelta(days=5)
+    threshold_date = datetime.utcnow() + timedelta(days=5)
     vehicles_due_for_maintenance = await vehicle_collection.find({"next_maintenance": {"$lte": threshold_date}}).to_list(None)
     for vehicle in vehicles_due_for_maintenance:
         maintenance = ({
