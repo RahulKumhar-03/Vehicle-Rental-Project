@@ -10,6 +10,7 @@ from config.database import user_collection
 from bson import ObjectId
 from datetime import datetime, timedelta
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from models.loginResponse import LoginResponse
 
 router = APIRouter()
 
@@ -84,13 +85,23 @@ async def register_admin(user: UserCreate):
     user_dict["id"] = str(result.inserted_id)
     return  User(**user_dict)
 
-@router.post("/login")
+@router.post("/login", response_model=LoginResponse)
 async def loginUser(email: str, password:str):
     user = await user_collection.find_one({"email": email})
+
     if not user or not check_password(password, user["password"]):
         raise HTTPException(status_code=401, detail="Invalid email or password")
+    
     token = create_jwt_token(data={"sub": str(user["_id"])})
-    return {"access_token": token, "token_type": "bearer"}
+
+    user_dict = {
+        "id": str(user["_id"]),
+        "name": user["name"],
+        "email": user["email"],
+        "role": user.get("role","user"),
+        "address": user["address"]
+    }
+    return {"access_token": token, "token_type": "bearer", "user": user_dict}
 
 
 '''

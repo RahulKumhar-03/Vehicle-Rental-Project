@@ -8,6 +8,7 @@ class VehicleBase(BaseModel):
     license_plate_no: str
     rental_rate: float
     location: str
+    description: Optional[str] = None
 
 class VehicleCreate(VehicleBase):
     pass
