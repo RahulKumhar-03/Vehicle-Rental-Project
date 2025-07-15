@@ -1,8 +1,11 @@
 ------------------- WELCOME TO README --------------------- 
 
--- setup venv - virtual environment 
--- python -m venv venv (initialize file venv)
--- run venv\Scripts\activate
+-----------------------------------------------------------------
+-- Backend using FastAPI and MongoDB Database --
+ - setup venv - virtual environment 
+ - python -m venv venv (initialize file venv)
+ - run venv\Scripts\activate
+ - Install all the dependeancies for the FastAPI
 -----------------------------------------------------------------
 -- FRONTEND using Angular --
 Installation of Angular --v 16
