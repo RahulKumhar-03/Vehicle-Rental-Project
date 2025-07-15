@@ -1,3 +1,5 @@
+------------------- WELCOME TO README --------------------- 
+
 -- setup venv - virtual environment 
 -- python -m venv venv (initialize file venv)
 -- run venv\Scripts\activate
