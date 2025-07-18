@@ -1,20 +1,20 @@
 
     <header class="inset-x-0 top-0 z-50">
-        <nav class="flex items-center justify-between p-4 lg:px-8">
+        <nav class="flex items-center justify-between p-2 lg:px-8">
         <div class="flex lg:flex-1">
-            <a class="-m-1.5 p-1.5 text-sm/2 text-2xl font-semibold text-gray-600" routerLink="/home">RentKaro.com</a>
+            <a class="-m-1.5 p-1.5 text-sm/2 text-2xl font-semibold" routerLink="/home">RentIt.com</a>
         </div>
         <div class=" lg:flex lg:gap-x-12">
-            <a routerLink="/vehicle-list" class="text-lg text-gray-600">Vehicle</a>
-            <a routerLink="/booking-list" class="text-lg text-gray-600">Bookings</a>
-            <a routerLink="/aboutus" class="text-lg text-gray-600">About Us</a>
-            <a routerLink="/maintenance-list" class="text-lg text-gray-600">Maintenance</a>
+            <a routerLink="/vehicle-list" class="text-lg">Vehicle</a>
+            <a routerLink="/booking-list" class="text-lg">Bookings</a>
+            <a routerLink="/aboutus" class="text-lg">About Us</a>
+            <a routerLink="/maintenance-list" class="text-lg">Maintenance</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            <button *ngIf="!isLoggedIn" class="relative text-lg text-gray-600 hover:bg-gray-400 transition rounded px-4 py-2" (click)="modalOpened = true">
+            <button *ngIf="!isLoggedIn" class="relative py-1 rounded px-6 hover:bg-white hover:text-black" (click)="modalOpened = true">
                 Login
             </button>
-            <button *ngIf="isLoggedIn" class="relative text-lg text-gray-600 hover:bg-gray-400 transition rounded px-4 py-2" (click)="logout()">
+            <button *ngIf="isLoggedIn" class="relative text-lg rounded px-6 hover:bg-white hover:text-black py-1" (click)="logout()">
                 Logout
             </button>
         </div>

@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from 'src/Schemas/interfaces'
+
 @Injectable({
   providedIn: 'root'
 })
@@ -61,28 +62,6 @@ export class AuthService {
     return user?.role === 'admin'
   }
 }
-export const authGuard = () => {
-  return (next: any, state: any) => {
-    const authService = new AuthService(next.injector.get(HttpClient), next.injector.get(Router));
-    if (authService.isAuthenticated()){
-      return true;
-    }
-    else{
-      authService.router.navigate(['/login'])
-      return false
-    }
-  }
-}
 
-export const adminGuard = () => {
-  return (next: any, state: any) => {
-    const authService = new AuthService(next.injector.get(HttpClient), next.injector.get(Router));
-    if(authService.isAuthenticated() && authService.isAdmin()){
-      return true
-    }
-    else{
-      authService.router.navigate(['/vehicle-list'])
-      return false
-    }
-  }
-}
+
+
