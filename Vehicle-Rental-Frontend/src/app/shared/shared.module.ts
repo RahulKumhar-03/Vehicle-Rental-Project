@@ -3,6 +3,10 @@ import { CommonModule } from '@angular/common';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { SliderComponent } from './components/slider/slider.component';
+import { LoginRegisterComponent } from './components/login-register/login-register.component';
+import { HttpClientModule } from '@angular/common/http';
+import { AuthService } from '../services/auth/auth.service';
+import { UserService } from '../services/user/user.service';
 
 
 @NgModule({
@@ -11,12 +15,20 @@ import { SliderComponent } from './components/slider/slider.component';
     CommonModule,
     NavBarComponent,
     FooterComponent,
-    SliderComponent
+    SliderComponent,
+    LoginRegisterComponent,
+    HttpClientModule
   ],
   exports: [
     NavBarComponent,
     FooterComponent,
-    SliderComponent
+    SliderComponent,
+    LoginRegisterComponent,
+    HttpClientModule
+  ], 
+  providers: [
+    AuthService, 
+    UserService
   ]
 })
 export class SharedModule { }

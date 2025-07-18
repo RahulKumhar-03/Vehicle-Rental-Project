@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { apiUrl } from 'src/environments/environment';
 import {HttpClient} from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 import { User } from 'src/Schemas/interfaces'
 @Injectable({
@@ -9,8 +9,10 @@ import { User } from 'src/Schemas/interfaces'
 })
 export class AuthService {
   private tokenKey = 'access_token'
-  private userKey = 'current_user'
-  private apiUrl = `${environment.apiUrl}/auth`;
+  private user = 'current_user'
+  private apiUrl = `${apiUrl}/auth`;
+  private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated()); 
+  loggedInStatus = this.loggedIn.asObservable();
 
   constructor(public http: HttpClient,  public router: Router) { }
 
@@ -19,18 +21,27 @@ export class AuthService {
       tap((response) => {
         localStorage.setItem(this.tokenKey,response.access_token)
         this.setCurrentUser(response.user)
+        this.loggedIn.next(true);
       })
     )
   }
 
+  autoLogin(user: User, token: string): void{
+    localStorage.setItem(this.tokenKey, token);
+    this.setCurrentUser(user);
+    this.loggedIn.next(true);
+    this.router.navigate(['/home'])
+  }
+
   logout(): void{
     localStorage.removeItem(this.tokenKey)
-    localStorage.removeItem(this.userKey)
-    this.router.navigate(["/login"])
+    localStorage.removeItem(this.user)
+    this.loggedIn.next(false);
+    this.router.navigate(["/home"])
   }
 
   setCurrentUser(user: User): void{
-    localStorage.setItem(this.userKey, JSON.stringify(user));
+    localStorage.setItem(this.user, JSON.stringify(user));
   }
 
   getToken(): string | null {
@@ -38,7 +49,7 @@ export class AuthService {
   }
 
   getCurrentUser(): User{
-    return JSON.parse(localStorage.getItem(this.userKey) || '{}');
+    return JSON.parse(localStorage.getItem(this.user) || '{}');
   }
 
   isAuthenticated(): boolean{

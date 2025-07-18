@@ -11,6 +11,8 @@ from bson import ObjectId
 from datetime import datetime, timedelta
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models.loginResponse import LoginResponse
+from models.registerResponse import RegisterResponse
+from models.credentials import LoginCredentials
 
 router = APIRouter()
 
@@ -26,7 +28,7 @@ def check_password(plain_password: str, hashed_password: str) -> bool:
 
 def create_jwt_token(data: dict):
     to_encode = data.copy()
-    expire = datetime.utcnow() + timedelta(days=1)
+    expire = datetime.utcnow() + timedelta(hours=2)
     to_encode.update({"exp":expire})
     return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.algorithm)
 
@@ -50,7 +52,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     '''
     
     
-@router.post("/register", response_model=User)
+@router.post("/register", response_model=RegisterResponse)
 async def register_user(user: UserCreate):
     existing_user = await user_collection.find_one({"email":user.email})
     if existing_user:
@@ -60,11 +62,19 @@ async def register_user(user: UserCreate):
     user_dict["password"] = hashed_password
     user_dict["role"] = "customer"
     user_dict["created_at"] = datetime.utcnow()
+
     new_user = await user_collection.insert_one(user_dict)
     user_dict["id"] = str(new_user.inserted_id)
-    return User(**user_dict)
 
-@router.post("/register-admin", response_model=User)
+    access_token = create_jwt_token(data ={"sub": str(new_user.inserted_id)})
+
+    return {
+        "user":User(**user_dict),
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
+
+@router.post("/register-admin", response_model=RegisterResponse)
 async def register_admin(user: UserCreate):
     existing_admin = await user_collection.find_one({"role": "admin"})
     if existing_admin:
@@ -83,14 +93,21 @@ async def register_admin(user: UserCreate):
 
     result = await user_collection.insert_one(user_dict)
     user_dict["id"] = str(result.inserted_id)
-    return  User(**user_dict)
+
+    token = create_jwt_token(data={"sub": str(result.inserted_id)})
+
+    return {
+        "user": User(**user_dict),
+        "access_token": token,
+        "token_type": "bearer"
+    }
 
 @router.post("/login", response_model=LoginResponse)
-async def loginUser(email: str, password:str):
-    user = await user_collection.find_one({"email": email})
+async def loginUser(credentials: LoginCredentials):
+    user = await user_collection.find_one({"email": credentials.email})
 
-    if not user or not check_password(password, user["password"]):
-        raise HTTPException(status_code=401, detail="Invalid email or password")
+    if not user or not check_password(credentials.password, user["password"]):
+        raise HTTPException(status_code=401, detail="Invalid email or password. Please Register!!")
     
     token = create_jwt_token(data={"sub": str(user["_id"])})
 
@@ -103,6 +120,9 @@ async def loginUser(email: str, password:str):
     }
     return {"access_token": token, "token_type": "bearer", "user": user_dict}
 
+@router.get('/profile', response_model=User)
+async def get_profile(current_user: User = Depends(get_current_user)):
+    return current_user
 
 '''
 @router.post("/logout")

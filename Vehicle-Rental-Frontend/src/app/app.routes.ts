@@ -6,12 +6,9 @@ export const routes: Routes = [
         path: 'home',  loadComponent: () => import('./pages/landing-page/landing-page.component').then(m => m.LandingPageComponent)
     },
     {   path:'', redirectTo: 'home', pathMatch:'full' },
+    
     {
-        path: 'login', loadComponent: () => import('./pages/login-register/login-register.component')
-        .then(m => m.LoginRegisterComponent)
-    },
-    {
-        path: 'booking-list', canActivate:[authGuard(), adminGuard()], loadComponent: () => import('./pages/bookings/booking-list/booking-list.component')
+        path: 'booking-list', canActivate:[authGuard()], loadComponent: () => import('./pages/bookings/booking-list/booking-list.component')
         .then(m => m.BookingListComponent)
     },
     {

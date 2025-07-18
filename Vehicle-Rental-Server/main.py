@@ -4,7 +4,17 @@ from routers.auth import security
 from services.maintenance import maintenance_check_alerts
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config.database import user_collection, booking_collection, maintenance_collection, vehicle_collection
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:4200"],  
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "DELETE", "UPDATE", "OPTIONS"], 
+    allow_headers=["Content-Type", "Authorization"],
+)
 
 app.include_router(auth.router, prefix="/auth",tags=["auth"])
 app.include_router(vehicle.router, prefix="/vehicle", tags=["vehicle"], dependencies=[Depends(security)])
