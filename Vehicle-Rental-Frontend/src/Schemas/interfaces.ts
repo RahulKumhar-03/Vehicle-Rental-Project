@@ -18,9 +18,12 @@ export interface Vehicle{
     location: string
     description?: string
     status: string
+<<<<<<< HEAD
     imageUrl?: string
     range?: number
     gearType?: "automatic" | "manual"
+=======
+>>>>>>> 42042e656aa8ede617cf0e991dd29787822006d6
 }
 
 export interface Booking{

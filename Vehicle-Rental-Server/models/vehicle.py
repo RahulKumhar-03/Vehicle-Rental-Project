@@ -9,6 +9,7 @@ class VehicleBase(BaseModel):
     rental_rate: float
     location: str
     description: Optional[str] = None
+<<<<<<< HEAD
     imageUrl: Optional[str] = None
     range: Optional[float] = None
     gearType: Optional[str] = None
@@ -18,6 +19,8 @@ class VehicleBase(BaseModel):
         if v and v not in ["automatic", "manual"]:
             raise ValueError("gearType must be 'automatic' or 'manual'")
         return v
+=======
+>>>>>>> 42042e656aa8ede617cf0e991dd29787822006d6
 
 class VehicleCreate(VehicleBase):
     pass
