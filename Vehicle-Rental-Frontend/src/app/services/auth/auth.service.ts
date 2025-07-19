@@ -1,9 +1,5 @@
 import { Injectable } from '@angular/core';
-<<<<<<< HEAD
 import { apiURL } from 'src/environments/environment';
-=======
-import { apiUrl } from 'src/environments/environment';
->>>>>>> 42042e656aa8ede617cf0e991dd29787822006d6
 import {HttpClient} from '@angular/common/http';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -15,11 +11,8 @@ import { User } from 'src/Schemas/interfaces'
 export class AuthService {
   private tokenKey = 'access_token'
   private user = 'current_user'
-<<<<<<< HEAD
   private apiUrl = `${apiURL}/auth`;
-=======
-  private apiUrl = `${apiUrl}/auth`;
->>>>>>> 42042e656aa8ede617cf0e991dd29787822006d6
+
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated()); 
   loggedInStatus = this.loggedIn.asObservable();
 
