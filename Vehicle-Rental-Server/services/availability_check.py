@@ -17,7 +17,7 @@ async def check_availability(start_date: datetime, end_date: datetime, vehicle_t
             "$or": [
                 {"start_date": {"$lte": end_date}, "end_date": {"$gte": start_date}},
             ]
-        })
+        }).to_list(None)
         if conflicting_bookings == 0:
             vehicle["id"] = str(vehicle["_id"])
             available_vehicles.append(Vehicle(**vehicle))

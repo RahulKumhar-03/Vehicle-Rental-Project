@@ -1,0 +1,66 @@
+<div class="w-full text-black">
+    <div class="flex justify-around mb-4 border-b">
+        <button
+          class="w-1/2 py-2 font-semibold text-black"
+          [class.border-b-2]="activeTab === 'login'"
+          (click)="activeTab = 'login'"
+        >
+          Login
+        </button>
+        <button
+          class="w-1/2 py-2 font-semibold text-black"
+          [class.border-b-2]="activeTab === 'register'"
+          (click)="activeTab = 'register'"
+        >
+          Register
+        </button>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-4">
+        <div *ngIf="activeTab === 'register'">
+          <input
+            type="text"
+            formControlName="name"
+            placeholder="Name"
+            class="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
+        <div>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Email"
+            class="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <div *ngIf="activeTab === 'register'">
+          <input
+            type="text"
+            formControlName="address"
+            placeholder="Address"
+            class="w-full p-2 border border-gray-300 rounded"
+          />
+        </div>
+
+        <div>
+          <input
+            type="password"
+            formControlName="password"
+            placeholder="Password"
+            class="w-full p-2 border border-gray-300 rounded"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          [disabled]="form.invalid"
+          class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition"
+        >
+          {{ activeTab === 'login' ? 'Login' : 'Register' }}
+        </button>
+    </form>
+</div>

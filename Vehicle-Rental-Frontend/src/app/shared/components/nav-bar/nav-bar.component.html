@@ -1,0 +1,30 @@
+
+    <header class="inset-x-0 top-0 z-50">
+        <nav class="flex items-center justify-between p-4 lg:px-8">
+        <div class="flex lg:flex-1">
+            <a class="-m-1.5 p-1.5 text-sm/2 text-2xl font-semibold" routerLink="/home">RentIt.com</a>
+        </div>
+        <div class=" lg:flex lg:gap-x-12">
+            <a routerLink="/vehicle-list" class="text-lg">Vehicle</a>
+            <a routerLink="/booking-list" class="text-lg">Bookings</a>
+            <a routerLink="/aboutus" class="text-lg">About Us</a>
+            <a routerLink="/maintenance-list" class="text-lg">Maintenance</a>
+        </div>
+        <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+            <button *ngIf="!isLoggedIn" class="relative py-1 rounded px-6 hover:bg-white hover:text-black" (click)="modalOpened = true">
+                Login
+            </button>
+            <button *ngIf="isLoggedIn" class="relative text-lg rounded px-6 hover:bg-white hover:text-black py-1" (click)="logout()">
+                Logout
+            </button>
+        </div>
+    </nav>
+</header>
+<div *ngIf="modalOpened" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div class="relative w-full max-w-md mx-auto bg-white rounded shadow-lg p-6">
+        <button class="absolute top-2 right-2 text-gray-600 hover:text-red-600 text-2xl font-bold" (click)="modalOpened = false">
+            &times;
+        </button>
+        <app-login-register (closeModal)="modalOpened = false"/>
+    </div>
+</div>

@@ -57,3 +57,11 @@ async def deleteVehicle(vehicle_id: str, currentUser: User = Depends(get_current
 @router.get('/available', response_model=List[Vehicle])
 async def get_available_vehicle(start_date: datetime = Query(...), end_date: datetime = Query(...), vehicle_type: str = Query(None)):
     return await check_availability(start_date, end_date, vehicle_type)
+
+@router.get("/{vehicle_id}", response_model=Vehicle)
+async def get_vehicle_details(vehicle_id: str):
+    vehicle = await vehicle_collection.find_one({"_id": ObjectId(vehicle_id)})
+    if not vehicle:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+    vehicle["id"] = str(vehicle["_id"])
+    return Vehicle(**vehicle)

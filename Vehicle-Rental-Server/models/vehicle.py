@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import Optional
 from datetime import datetime
 
@@ -8,6 +8,16 @@ class VehicleBase(BaseModel):
     license_plate_no: str
     rental_rate: float
     location: str
+    description: Optional[str] = None
+    imageUrl: Optional[str] = None
+    range: Optional[float] = None
+    gearType: Optional[str] = None
+
+    @validator("gearType")
+    def validate_gear_type(cls, v):
+        if v and v not in ["automatic", "manual"]:
+            raise ValueError("gearType must be 'automatic' or 'manual'")
+        return v
 
 class VehicleCreate(VehicleBase):
     pass
