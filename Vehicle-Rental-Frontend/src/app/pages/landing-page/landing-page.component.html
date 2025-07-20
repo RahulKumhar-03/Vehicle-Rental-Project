@@ -23,21 +23,60 @@
         </div> 
     </section>
     <!--Slider Section-->
-    <section id="slider" class="py-6">
-        <div>
-            <h2 class="slider-title text-2xl font-semibold absolute left-28 ">POPULAR VEHICLE's</h2><br>
-            <div class="flex justify-evenly py-6 space-x-10">
-                <div>
-                    <a routerLink="/vehicle-list" class="text-xl">View All</a>
+    <section id="slider" class="px-6 sm:px-8 md:px-10 lg:px-12">
+    <div class="flex flex-col">
+        <h2 class="slider-title text-2xl font-semibold mt-0 ml-8 sm:ml-12 md:ml-16 lg:ml-20">POPULAR VEHICLE'S</h2>
+        <div class="flex justify-evenly py-4 sm:py-6 space-x-6 sm:space-x-8 md:space-x-10">
+            <div>
+                <a routerLink="/vehicle-list" class="text-lg sm:text-xl hover:underline">View All</a>
+            </div>
+            <div class="border border-gray-200 px-4 sm:px-6 py-0.5 text-lg sm:text-xl rounded-md hover:bg-white hover:text-black">
+                Top Rated
+            </div>
+            <div class="text-lg sm:text-xl">
+                Luxury
+            </div>
+        </div>
+        <div id="slider-component" class="flex sm:grid-cols-2 md:grid-cols-3 gap-6 py-4 justify-evenly">
+            <div *ngFor="let v of cardVehicles" class="w-80 h-96 border border-gray-600 rounded-lg shadow-lg overflow-hidden flex flex-col">
+                <h3 class="text-xl font-semibold px-4 py-3">{{v.name}}</h3>
+                <div class="flex px-8 justify-between">
+                    <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{v.bodyType}}</p>
+                    <p class="border rounded-full border-gray-100 text-sm px-3 py-1">Advice Of The Day</p>
                 </div>
-                <div class="border border-gray-200 px-6 py-0.5 text-xl rounded-md hover:bg-white hover:text-black">
-                    SUV
+                <img [src]="v.image" alt="{{v.name}}" class="w-full h-52 object-cover">
+                <!-- 1. AMG A45 https://www.carblogindia.com/wp-content/uploads/2014/05/2015-Mercedes-Benz-GLA45-AMG-Left-Side.jpg
+                     2. BMW M5  https://e1.pxfuel.com/desktop-wallpaper/272/238/desktop-wallpaper-concept-art-gradient-bmw-m5-3d-f10-bmw-f10.jpg
+                     3. Audi R8 https://www.automobilesreview.com/img/audi-r8-tdi-lemans/audi-r8-tdi-le-mans-02.jpg
+                -->
+                <div class="flex">
+                    <p class="text-2xl font-bold pl-4">{{v.price}}</p><span class="text-lg text-gray-300 pt-1">.00 $/DAY</span>
                 </div>
-                <div class="text-xl">
-                    Luxury
+                <div class="flex">
+                    <p class="text-2xl font-bold pl-4 pr-1">{{v.range}}</p><span class="text-lg text-gray-300 pt-1">KM PER RENTAL</span>
                 </div>
             </div>
-                <div class="" id="slider-component"></div>
+        </div>
+    </div>
+    </section>
+    <!--3rd Section-->
+    <section id="3rd">
+        <div class="flex flex-col"> 
+            <div class="grid grid-cols-5 gap-2 px-40 pt-10">  <!-- gap-4 adds space between columns -->
+                <div class="bg-gray-200 p-2">Column 1</div>
+                <div class="bg-gray-300 p-4">Column 2</div>
+                <div class="bg-gray-400 p-4">Column 3</div>
+                <div class="bg-gray-500 p-4">Column 4</div>
+                <div class="bg-gray-600 p-4">Column 5</div>
+            </div>
+
+            <div class="grid grid-cols-5 gap-2 px-40 pt-10">  <!-- gap-4 adds space between columns -->
+                <div class="bg-gray-200 p-2">Column 1</div>
+                <div class="bg-gray-300 p-4">Column 2</div>
+                <div class="bg-gray-400 p-4">Column 3</div>
+                <div class="bg-gray-500 p-4">Column 4</div>
+                <div class="bg-gray-600 p-4">Column 5</div>
+            </div>
         </div>
     </section>
 </div>
