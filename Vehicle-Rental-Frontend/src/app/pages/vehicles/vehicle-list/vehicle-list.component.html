@@ -1,1 +1,58 @@
-<p>vehicle-list works!</p>
+<div class="container mx-auto p-4">
+    <!--Admin vehicle creation and update button-->
+    <div class="mb-4" *ngIf="authService.isAdmin()">
+        <button (click)="openVehicleModal()" class="border border-gray-600 hover:bg-white hover:text-black py-2 px-3 rounded-lg">
+            Add Vehicle
+        </button>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <div class="rounded-lg border border-gray-600 p-4" *ngFor="let vehicle of vehicles">
+            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">{{vehicle.model}}</h3>
+            <div class="flex px-6 justify-between">
+                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.type}}</p>
+                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.gearType}}</p>
+            </div>
+            <img [src]="vehicle.imageUrl" alt="Car image" class="w-full h-52 object-cover pt-2">
+            <p class="text-xs px-3 pt-2" *ngIf="vehicle.description">{{vehicle.description}}</p>
+            <div class="flex">
+                <p class="text-2xl font-bold pl-4">{{vehicle.rental_rate}}</p><span class="text-lg text-gray-300 pt-1">.00 Rs/DAY</span>
+            </div>
+            <div class="flex">
+                <p class="text-2xl font-bold pl-4 pr-1">{{vehicle.range}}</p><span class="text-lg text-gray-300 pt-1">KM PER RENTAL</span>
+            </div>
+            
+            <div class="flex justify-evenly">
+                <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+                    (click)="openBookingModal(vehicle)" *ngIf="authService.isCustomer()"
+                >
+                    Book Now
+                </button>
+                <div *ngIf="authService.isAdmin()" class="space-x-4">
+                    <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
+                        (click)="openVehicleModal(vehicle)"
+                    >
+                    Edit
+                    </button>
+                    <button (click)="deleteVehicle(vehicle.id)"
+                        class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+                    >
+                    Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-booking-form 
+            *ngIf="bookingModalOpened && selectedVehicle" 
+            [vehicle]="selectedVehicle!" 
+            (close)="closeBookingModal($event)"
+    ></app-booking-form>
+
+    <app-vehicle-form
+        *ngIf="vehicleModalOpened"
+        [vehicle]="selectedVehicle"
+        (close)="closeVehicleModal($event)"
+    ></app-vehicle-form>
+</div>
+

@@ -1,13 +1,76 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { Vehicle } from 'src/Schemas/interfaces';
+import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
+import { AuthService } from 'src/app/services/auth/auth.service';
+import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
+import { BookingFormComponent } from '../../bookings/booking-form/booking-form.component';
+import { BookingService } from 'src/app/services/booking/booking.service';
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, VehicleFormComponent, BookingFormComponent],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent {
+  bookingModalOpened: boolean = false
+  vehicleModalOpened: boolean = false
+  selectedVehicle: Vehicle | null = null
+  vehicles: Vehicle[] = []
 
+  constructor( 
+    public vehicleService: VehicleService,
+    public authService: AuthService,
+    public bookingService: BookingService
+  ){}
+
+  ngOnInit():void{
+    this.loadVehicles();
+  }
+  loadVehicles():void{
+    this.vehicleService.getVehicles().subscribe({
+      next: (vehicles) => (this.vehicles = vehicles),
+      error: (err) => console.error('Error fetching vehicles: ',err),
+    })
+  }
+
+  openBookingModal(vehicle: Vehicle):void{
+    if(!this.authService.isAuthenticated()){
+      alert('Please log in to rent a vehicle.!!')
+      return;
+    }
+    this.selectedVehicle = vehicle
+    this.bookingModalOpened = true
+  }
+
+  closeBookingModal(bookingData: any){
+    this.bookingModalOpened = false
+    this.selectedVehicle = null
+    if(bookingData){
+      console.log('Booking Data', bookingData)
+    }
+  }
+  
+  openVehicleModal(vehicle?: Vehicle): void{
+      this.selectedVehicle = vehicle || null
+      this.vehicleModalOpened = true
+  }
+
+  closeVehicleModal(refresh: boolean){
+    this.vehicleModalOpened = false
+    this.selectedVehicle = null
+    if(refresh){
+      this.loadVehicles()
+    }
+  }
+ 
+  deleteVehicle(vehicle_id: string):void{
+    if(confirm('Are you sure you want to delete this vehicle?')){
+      this.vehicleService.deleteVehicle(vehicle_id).subscribe({
+        next: () => this.loadVehicles(),
+        error: (err) => console.error('Error while deleting vehicle: ',err)
+      })
+    }
+  }
 }

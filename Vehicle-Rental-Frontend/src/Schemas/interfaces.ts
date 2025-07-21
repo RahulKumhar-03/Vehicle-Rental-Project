@@ -8,7 +8,7 @@ export interface User{
 }
 
 export interface Vehicle{
-    id?: string
+    id: string
     model: string
     type: string
     next_maintenance?: string

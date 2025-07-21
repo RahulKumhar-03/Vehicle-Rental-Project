@@ -15,7 +15,7 @@ class VehicleBase(BaseModel):
 
     @validator("gearType")
     def validate_gear_type(cls, v):
-        if v and v not in ["automatic", "manual"]:
+        if v and v not in ["Automatic", "Manual"]:
             raise ValueError("gearType must be 'automatic' or 'manual'")
         return v
 

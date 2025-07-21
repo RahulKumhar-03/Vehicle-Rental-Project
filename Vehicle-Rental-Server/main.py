@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router, prefix="/auth",tags=["auth"])
-app.include_router(vehicle.router, prefix="/vehicle", tags=["vehicle"], dependencies=[Depends(security)])
+app.include_router(vehicle.router, prefix="/vehicle", tags=["vehicle"])
 app.include_router(booking.router, prefix="/booking", tags=["booking"], dependencies=[Depends(security)])  
 app.include_router(maintenance.router, prefix="/maintenance", tags=["maintenance"], dependencies=[Depends(security)])
 

@@ -25,7 +25,7 @@
     <!--Slider Section-->
     <section id="slider" class="px-6 sm:px-8 md:px-10 lg:px-12">
     <div class="flex flex-col">
-        <h2 class="slider-title text-2xl font-semibold mt-0 ml-8 sm:ml-12 md:ml-16 lg:ml-20">POPULAR VEHICLE'S</h2>
+        <h2 class="slider-title text-2xl font-semibold pt-10 ml-8 sm:ml-12 md:ml-16 lg:ml-20">POPULAR VEHICLE'S</h2>
         <div class="flex justify-evenly py-4 sm:py-6 space-x-6 sm:space-x-8 md:space-x-10">
             <div>
                 <a routerLink="/vehicle-list" class="text-lg sm:text-xl hover:underline">View All</a>
@@ -61,21 +61,87 @@
     </section>
     <!--3rd Section-->
     <section id="3rd">
+        <div class="grid grid-cols-2 mx-32 gap-4 lg:py-20">
+            <div class="left flex-flex-col">
+                <h1 class="text-2xl font-semibold">LUXURY CAR RENTAL</h1>
+                <p class="py-8 text-sm">
+                    A small river named Duden flows by their place and supplies it with<br> the
+                    necessary regelialia. It is a paradise.
+                </p>
+                <div class="flex gap-8">
+                    <div class="flex">
+                        <img width="40" height="40" class="mr-2" src="https://img.icons8.com/dotty/40/FFFFFF/tesla-model-x.png" alt="tesla-model-x"/>
+                        <h6 class="text-xl font-semibold pt-2">MOTORS</h6>
+                    </div>
+                    <div class="flex">
+                        <img width="40" height="40" class="mx-2" src="https://img.icons8.com/ios/50/FFFFFF/sparkling-diamond.png" alt="sparkling-diamond"/>
+                        <h6 class="text-xl font-semibold pt-2">PICK UP</h6>
+                    </div>
+                    <div class="flex">
+                        <img width="40" height="40" class="mx-2" src="https://img.icons8.com/windows/40/FFFFFF/red-carpet.png" alt="red-carpet"/>
+                        <h6 class="text-xl font-semibold pt-2">LUXURY</h6>
+                    </div>
+                </div>
+            </div>
+
+            <div class="right">
+                <div class="relative w-full">
+                    <!--bottom image-->
+                    <img src="assets/images/4th-section-img-1.jpg" class="absolute w-3/4 transform -translate-x-1/2 left-1/4 ml-20 mt-16" alt="">
+                    <!--top image-->
+                    <img src="assets/images/4th-section-img-2.jpg" class="absolute w-1/2 h-auto left-1/2 z-24" alt="">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!--4th Section-->
+    <section id="4th">
         <div class="flex flex-col"> 
+            <h1 class="text-2xl font-semibold pt-10 ml-8 sm:ml-12 md:ml-16 lg:ml-32 ">CAR'S WITH BODY TYPE</h1>
             <div class="grid grid-cols-5 gap-2 px-40 pt-10">  <!-- gap-4 adds space between columns -->
-                <div class="bg-gray-200 p-2">Column 1</div>
-                <div class="bg-gray-300 p-4">Column 2</div>
-                <div class="bg-gray-400 p-4">Column 3</div>
-                <div class="bg-gray-500 p-4">Column 4</div>
-                <div class="bg-gray-600 p-4">Column 5</div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Coupe.jpg" alt="">
+                    <p class="text-md">Sedan</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Sports.jpg" alt="">
+                    <p class="text-md">Sports</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Off-Roading.jpg" alt="">
+                    <p class="text-md">Off-Roader</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Crossover.jpg" alt="">
+                    <p class="text-md">Crossover</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Compact-SUV.jpg" alt="">
+                    <p class="text-md">Compact SUV</p>
+                </div>
             </div>
 
             <div class="grid grid-cols-5 gap-2 px-40 pt-10">  <!-- gap-4 adds space between columns -->
-                <div class="bg-gray-200 p-2">Column 1</div>
-                <div class="bg-gray-300 p-4">Column 2</div>
-                <div class="bg-gray-400 p-4">Column 3</div>
-                <div class="bg-gray-500 p-4">Column 4</div>
-                <div class="bg-gray-600 p-4">Column 5</div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Convertible.jpg" alt="">
+                    <p class="text-md">Convertible</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Hatchback.jpg" alt="">
+                    <p class="text-md">Hatchback</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Limo.jpg" alt="">
+                    <p class="text-md">Limousine</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Wagon.jpg" alt="">
+                    <p class="text-md">Wagon</p>
+                </div>
+                <div class="p-4 justify-items-center">
+                    <img src="assets/images/Micro.jpg" alt="">
+                    <p class="text-md">Micro</p>
+                </div>
             </div>
         </div>
     </section>
