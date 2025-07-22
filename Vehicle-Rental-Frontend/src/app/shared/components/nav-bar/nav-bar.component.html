@@ -9,7 +9,7 @@
             <a routerLink="/vehicle-list" class="text-lg">Vehicle</a>
             <a routerLink="/booking-list" class="text-lg">Bookings</a>
             <a routerLink="/aboutus" class="text-lg">About Us</a>
-            <a routerLink="/maintenance-list" class="text-lg">Maintenance</a>
+            <a routerLink="/maintenance-list" class="text-lg" *ngIf="authService.isAdmin()">Maintenance</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
             <button *ngIf="!isLoggedIn" class="relative py-1 rounded px-6 hover:bg-white hover:text-black" (click)="modalOpened = true">

@@ -1,1 +1,38 @@
-<p>booking-list works!</p>
+<div class="booking-list-container p-6">
+    <h2 class="text-2xl font-bold mb-4 px-14">Booking List</h2>
+    <div *ngIf="isLoading" class="text-center">Loading bookings...</div>
+     <div *ngIf="!isLoading && bookings.length === 0" class="text-center">
+        No bookings found.
+    </div>
+    <div *ngIf="!isLoading && bookings.length > 0" class="space-y-2">
+        <div *ngFor="let booking of bookings" class="px-24 py-4 flex justify-between">
+            <div class="booking-details">
+                <h3 class="text-xl font-semibold">{{ booking.vehicle_name }} (Booking ID: {{ booking.id }})</h3>
+                <p><strong>Vehicle ID:</strong> {{ booking.vehicle_id }}</p>
+                <p *ngIf="authService.isAdmin()"><strong>User ID:</strong> {{ booking.user_id }}</p>
+                <p *ngIf="authService.isAdmin()" class=""><strong>User Name:</strong> {{ booking.user_name || 'N/A' }}</p>
+                <p><strong>Start Date:</strong> {{ booking.start_date | date:'medium' }}</p>
+                <p><strong>End Date:</strong> {{ booking.end_date | date:'medium' }}</p>
+                <p><strong>Status:</strong> {{ booking.status }}</p>
+                <p *ngIf="booking.total_amount" class="font-semibold"><strong>Total Amount:</strong> Rs. {{ booking.total_amount }}</p>
+            </div>
+            <div class="buttons flex space-x-4">
+                <button 
+                    class="border border-gray-200 text-white px-6 rounded py-2 h-10"
+                    (click)="openBookingModal(booking)"
+                >
+                    Edit
+                </button>
+                <button class="border border-red-400 px-6 py-2 hover:bg-red-500 h-10 rounded" (click)="deleteBooking(booking.id!)">
+                    Delete
+                </button>
+            </div>
+        </div>
+    </div>
+    <app-edit-booking-modal
+        *ngIf="bookingModalOpened && selectedBooking && selectedVehicle"
+        [booking]="selectedBooking"
+        [vehicle]="selectedVehicle"
+        (close)="closeBookingModal($event)"
+    ></app-edit-booking-modal>
+</div>

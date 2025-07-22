@@ -15,22 +15,24 @@ async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> Lis
         result = []
         for booking in bookings:
             vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking["vehicle_id"])})
-            user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
+            user_doc = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
+            user_name = booking.get("user_name") or (user_doc.get("name") if user_doc else None)
+            ## user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
             booking_dict = {
                 **booking,
                 "id": str(booking["_id"]),
                 "user_id": str(booking["user_id"]),
-                "user_name": user["name"] if user else "Unknown",
+                "user_name": user_name,
                 "vehicle_id": str(booking["vehicle_id"]),
                 "vehicle_name": vehicle["model"] if vehicle else "Unknown" 
             }
-            result.append(booking_dict)
+            result.append(Booking(**booking_dict))
         return result
     else:
         bookings = await booking_collection.find({"user_id": str(currentUser.id)}).to_list(None)
         result = []
         for booking in bookings:
-            vehicle = await vehicle_collection.find_one({"_id": booking["vehicle_id"]})
+            vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking["vehicle_id"])})
             booking_dict = {
                 **booking,
                 "id": str(booking["_id"]),
@@ -64,6 +66,9 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
     booking_dict["user_id"] = str(currentUser.id)
     booking_dict["total_amount"] = vehicle["rental_rate"] * ((booking.end_date - booking.start_date).days + 1)
     booking_dict["status"] = "confirmed"
+
+    if booking.user_name:
+        booking_dict["user_name"] = booking.user_name
 
     result = await booking_collection.insert_one(booking_dict)
 
@@ -105,6 +110,9 @@ async def updateBooking(booking_id: str, booking: BookingCreate, currentUser: Us
     booking_dict["user_id"] = str(currentUser.id)
     booking_dict["status"] = "confirmed"
     booking_dict["total_amount"] = vehicle["rental_rate"] * ((booking.end_date - booking.start_date).days + 1)
+
+    if booking.user_name:
+        booking_dict["user_name"] = booking.user_name
 
     await booking_collection.update_one(
         {"_id": ObjectId(booking_id)},

@@ -5,6 +5,7 @@ from services.maintenance import maintenance_check_alerts
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from config.database import user_collection, booking_collection, maintenance_collection, vehicle_collection
 from fastapi.middleware.cors import CORSMiddleware
+from services.update_vehicle_status import update_vehicle_status
 
 app = FastAPI()
 
@@ -28,7 +29,8 @@ async def init_db_indexes():
     await booking_collection.create_index([("user_id",1), ("vehicle_id",1), ("start_date",1), ("end_date",1)])
 
 scheduler = AsyncIOScheduler()
-scheduler.add_job(maintenance_check_alerts, 'interval', days=1)
+scheduler.add_job(maintenance_check_alerts, 'interval', hours=1)
+scheduler.add_job(update_vehicle_status, 'interval', minutes=5)
 scheduler.start()
 
 @app.on_event("startup")

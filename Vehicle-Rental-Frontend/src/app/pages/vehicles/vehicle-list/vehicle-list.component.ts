@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Vehicle } from 'src/Schemas/interfaces';
+import { User, Vehicle } from 'src/Schemas/interfaces';
 import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 import { BookingFormComponent } from '../../bookings/booking-form/booking-form.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
+
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
@@ -14,6 +15,7 @@ import { BookingService } from 'src/app/services/booking/booking.service';
   styleUrls: ['./vehicle-list.component.css']
 })
 export class VehicleListComponent {
+
   bookingModalOpened: boolean = false
   vehicleModalOpened: boolean = false
   selectedVehicle: Vehicle | null = null
@@ -48,7 +50,14 @@ export class VehicleListComponent {
     this.bookingModalOpened = false
     this.selectedVehicle = null
     if(bookingData){
-      console.log('Booking Data', bookingData)
+      this.bookingService.createBooking(bookingData as any).subscribe({
+        next: (response) => {
+          alert(`${bookingData.vehicle_name} successfully booked from ${bookingData.start_date} to ${bookingData.end_date}`)
+          this.bookingModalOpened = false
+          this.selectedVehicle = null
+        }, 
+        error: (err) => console.error('Error while booking', err)
+      })
     }
   }
   

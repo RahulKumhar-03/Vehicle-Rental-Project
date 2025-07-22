@@ -26,6 +26,7 @@ export interface Vehicle{
 export interface Booking{
     id?: string
     user_id: string
+    user_name: string
     vehicle_id: string
     vehicle_name: string
     start_date: string

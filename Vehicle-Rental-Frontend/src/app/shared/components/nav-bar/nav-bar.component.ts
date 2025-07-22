@@ -15,7 +15,7 @@ export class NavBarComponent {
   modalOpened: boolean = false
   isLoggedIn: boolean = false
 
-  constructor(private authService: AuthService){
+  constructor(public authService: AuthService){
     this.authService.loggedInStatus.subscribe((status)=>{
       this.isLoggedIn = status
     })

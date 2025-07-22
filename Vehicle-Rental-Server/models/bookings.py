@@ -6,6 +6,7 @@ class BookingBase(BaseModel):
     vehicle_id: str
     vehicle_name: str 
     user_id: str
+    user_name: Optional[str] = None
     start_date: datetime
     end_date: datetime
 
