@@ -5,7 +5,8 @@
         No bookings found.
     </div>
     <div *ngIf="!isLoading && bookings.length > 0" class="space-y-2">
-        <div *ngFor="let booking of bookings" class="px-24 py-4 flex justify-between">
+        <div class="px-24 py-4 space-y-6">
+        <div *ngFor="let booking of bookings" class="border border-gray-200 rounded-lg p-4 flex justify-between">
             <div class="booking-details">
                 <h3 class="text-xl font-semibold">{{ booking.vehicle_name }} (Booking ID: {{ booking.id }})</h3>
                 <p><strong>Vehicle ID:</strong> {{ booking.vehicle_id }}</p>
@@ -16,7 +17,7 @@
                 <p><strong>Status:</strong> {{ booking.status }}</p>
                 <p *ngIf="booking.total_amount" class="font-semibold"><strong>Total Amount:</strong> Rs. {{ booking.total_amount }}</p>
             </div>
-            <div class="buttons flex space-x-4">
+            <div class="buttons flex space-x-4" *ngIf="!authService.isAdmin()">
                 <button 
                     class="border border-gray-200 text-white px-6 rounded py-2 h-10"
                     (click)="openBookingModal(booking)"
@@ -27,6 +28,7 @@
                     Delete
                 </button>
             </div>
+        </div>
         </div>
     </div>
     <app-edit-booking-modal

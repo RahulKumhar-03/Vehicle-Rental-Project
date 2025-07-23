@@ -15,8 +15,8 @@ async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> Lis
         result = []
         for booking in bookings:
             vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking["vehicle_id"])})
-            user_doc = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
-            user_name = booking.get("user_name") or (user_doc.get("name") if user_doc else None)
+            user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
+            user_name = booking.get("user_name") or (user.get("name") if user else None)
             ## user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
             booking_dict = {
                 **booking,
@@ -51,9 +51,9 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
     if not vehicle or vehicle["status"] != "available":
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
     
-    if vehicle["next_maintenance"] and booking.end_date >= vehicle["next_maintenance"] - timedelta(days=5):
+    if vehicle["next_maintenance"] and booking.end_date >= vehicle["next_maintenance"] - timedelta(days=2):
         raise HTTPException(status_code=400, detail="Booking too close to scheduled maintenance")
-    
+
     conflict = await booking_collection.count_documents({
         "vehicle_id": ObjectId(booking.vehicle_id),
         "$or" :[{"start_date": {"$lte": booking.end_date}, "end_date":{"$gte": booking.start_date}}]
@@ -71,13 +71,7 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
         booking_dict["user_name"] = booking.user_name
 
     result = await booking_collection.insert_one(booking_dict)
-
     booking_dict["id"] = str(result.inserted_id)
-
-    await vehicle_collection.update_one(
-        {"_id": ObjectId(booking.vehicle_id)},
-        {"$set": {"status": "rented"}}
-    )
 
     return Booking(**booking_dict)
 
@@ -120,16 +114,7 @@ async def updateBooking(booking_id: str, booking: BookingCreate, currentUser: Us
     )
 
     if existing_booking["vehicle_id"] != booking.vehicle_id:
-
-        await vehicle_collection.update_one(
-            {"_id": ObjectId(existing_booking["vehicle_id"])},
-            {"$set": {"status" : "available"}}
-        )
-
-        await vehicle_collection.update_one(
-            {"_id": ObjectId(booking.vehicle_id)},
-            {"$set": { "status":"rented" }}
-        )
+        pass
 
     updated_booking = await booking_collection.find_one({"_id": ObjectId(booking_id)})
     return {

@@ -13,8 +13,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:4200"],  
     allow_credentials=True,
-    allow_methods=["GET", "POST", "DELETE", "UPDATE", "OPTIONS"], 
-    allow_headers=["Content-Type", "Authorization"],
+    allow_methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"], 
+    allow_headers=["*"],
 )
 
 app.include_router(auth.router, prefix="/auth",tags=["auth"])
@@ -30,7 +30,7 @@ async def init_db_indexes():
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(maintenance_check_alerts, 'interval', hours=1)
-scheduler.add_job(update_vehicle_status, 'interval', minutes=5)
+scheduler.add_job(update_vehicle_status, 'interval', minutes=1)
 scheduler.start()
 
 @app.on_event("startup")

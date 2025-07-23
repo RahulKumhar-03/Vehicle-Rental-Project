@@ -28,21 +28,40 @@ export class EditBookingModalComponent {
 
   ngOnInit(): void {
     if (this.booking) {
-      const startDate = new Date(this.booking.start_date).toISOString().split('T')[0];
-      const endDate = new Date(this.booking.end_date).toISOString().split('T')[0];
+      const startDate = new Date(this.booking.start_date);
+      const endDate = new Date(this.booking.end_date);
+      
+      const localStartDate = startDate.toLocaleDateString('en-CA'); 
+      const localEndDate = endDate.toLocaleDateString('en-CA');
+
       this.editForm.patchValue({
-        start_date: startDate,
-        end_date: endDate,
+        start_date: localStartDate,
+        end_date: localEndDate,
       });
     }
   }
 
   onSubmit() {
     if (this.editForm.valid) {
-      const startDate = new Date(this.editForm.value.start_date).toISOString();
-      const endDate = new Date(this.editForm.value.end_date).toISOString();
+      const startDateValue = this.editForm.value.start_date;
+      const endDateValue = this.editForm.value.end_date;
 
-      if (startDate < this.currentDate || endDate < this.currentDate) {
+      if (!startDateValue || !endDateValue) {
+        console.error('Start or end date is missing');
+        return;
+      }
+
+      const startDate = new Date(startDateValue);
+      const endDate = new Date(endDateValue);
+      if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+        console.error('Invalid date values', { startDateValue, endDateValue });
+        return;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      if (startDate < today || endDate < today) {
         alert('Booking dates cannot be in the past');
         return;
       }
@@ -52,8 +71,8 @@ export class EditBookingModalComponent {
         vehicle_name: this.vehicle.model,
         user_id: this.authService.getCurrentUser().id!,
         user_name: this.authService.getCurrentUser().name,
-        start_date: startDate,
-        end_date: endDate,
+        start_date: startDate.toISOString(),
+        end_date: endDate.toISOString(),
       };
       this.close.emit(bookingData);
     }

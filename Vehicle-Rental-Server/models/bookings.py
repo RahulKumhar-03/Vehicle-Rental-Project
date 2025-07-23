@@ -15,7 +15,7 @@ class BookingCreate(BookingBase):
 
 class Booking(BookingBase):
     id: Optional[str] = None
-    status: str = "pending"
+    status: str = "Pending"
     total_amount: Optional[float] = None
 
     class Config:

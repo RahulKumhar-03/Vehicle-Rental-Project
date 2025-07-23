@@ -3,7 +3,7 @@ from models.vehicle import Vehicle, VehicleCreate
 from config.database import vehicle_collection
 from bson import ObjectId
 from routers.auth import get_current_user, User
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from services.availability_check import check_availability
 
@@ -55,7 +55,7 @@ async def deleteVehicle(vehicle_id: str, currentUser: User = Depends(get_current
     return {"message": "Vehicle deleted"}
 
 @router.get('/available', response_model=List[Vehicle])
-async def get_available_vehicle(start_date: datetime = Query(...), end_date: datetime = Query(...), vehicle_type: str = Query(None)):
+async def get_available_vehicle(start_date: Optional[datetime] = Query(...), end_date: Optional[datetime] = Query(...), vehicle_type: Optional[str] = Query(None)):
     return await check_availability(start_date, end_date, vehicle_type)
 
 @router.get("/{vehicle_id}", response_model=Vehicle)

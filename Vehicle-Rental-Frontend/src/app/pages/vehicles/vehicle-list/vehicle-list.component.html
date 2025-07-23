@@ -6,12 +6,30 @@
         </button>
     </div>
 
+    <div class="serachBar  justify-evenly p-4 mb-6" *ngIf="authService.isCustomer()">
+        <form action="" [formGroup]="searchForm" class="flex gap-8 justify-center">
+            <input type="date" [min]="currentDate" formControlName="start_date" placeholder="Start Date" class="rounded-lg border border-gray-100 p-2 text-black">
+            <input type="date" [min]="currentDate" formControlName="end_date" placeholder="End Date" class="rounded-lg border border-gray-100 p-2 text-black">
+            <select id="type" formControlName="vehicle_type" placeholder="Select Car Type" class="text-black border border-gray-100 rounded-lg px-2">
+                <option value="">Car Types</option>
+                <option value="Sedan">Sedan</option>
+                <option value="convertible">Convertible</option>
+                <option value="Sports">Sports</option>
+                <option value="suv">SUV</option>
+                <option value="off-roader">Off Roader</option>
+                <option value="coupe">Coupe</option>
+                <option value="hatchback">Hatchback</option>
+            </select>
+        </form>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-        <div class="rounded-lg border border-gray-600 p-4" *ngFor="let vehicle of vehicles">
+        <div class="rounded-lg border border-gray-600 p-4 w-auto" *ngFor="let vehicle of vehicles">
             <h3 class="text-xl font-semibold px-4 pt-1 pb-2">{{vehicle.model}}</h3>
-            <div class="flex px-6 justify-evenly">
+            <div class="flex justify-evenly space-x-1">
                 <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.type}}</p>
                 <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.gearType}}</p>
+                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.location}}</p>
             </div>
             <img [src]="vehicle.imageUrl" alt="Car image" class="w-full h-52 object-cover pt-2">
             <p class="text-xs px-3 pt-2" *ngIf="vehicle.description">{{vehicle.description}}</p>
@@ -28,7 +46,7 @@
                 >
                     Book Now
                 </button>
-                <div *ngIf="authService.isAdmin()" class="space-x-4">
+                <div *ngIf="authService.isAdmin()" class="space-x-4 ">
                     <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
                         (click)="openVehicleModal(vehicle)"
                     >
@@ -51,7 +69,7 @@
 
     <app-vehicle-form
         *ngIf="vehicleModalOpened"
-        [vehicle]="selectedVehicle"
+        [vehicle]="selectedVehicle!"
         (close)="closeVehicleModal($event)"
     ></app-vehicle-form>
 </div>

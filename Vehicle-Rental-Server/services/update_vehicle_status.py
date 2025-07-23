@@ -1,15 +1,47 @@
-from datetime import datetime
+from datetime import datetime,timedelta
 from config.database import vehicle_collection, booking_collection
 from bson import ObjectId
 
 async def update_vehicle_status():
-    currentTime = datetime.utcnow()
-    completed_bookings = await booking_collection.find({"end_date": {"$lt": currentTime}}).to_list(None)
-    for booking in completed_bookings:
-        vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking["vehicle_id"])})
-        if vehicle and vehicle["status"] == "rented":
+    current_time = datetime.utcnow()
+    
+    current_time -= timedelta(hours=5, minutes=30)  # Adjust for IST to UTC
+    
+    vehicles = await vehicle_collection.find().to_list(None)
+    
+    for vehicle in vehicles:
+        vehicle_id = str(vehicle["_id"])
+     
+        active_bookings = await booking_collection.find({
+            "vehicle_id": vehicle_id,
+            "start_date": {"$lte": current_time},
+            "end_date": {"$gte": current_time},
+            "status": "confirmed"
+        }).to_list(None)
+        
+        
+        new_vehicle_status = "available"
+        if active_bookings:
+            new_vehicle_status = "rented"
+        elif vehicle.get("status") == "maintenance":
+            new_vehicle_status = "maintenance"
+       
+        if vehicle["status"] != new_vehicle_status:
             await vehicle_collection.update_one(
-                {"_id": ObjectId(booking["vehicle_id"])},
-                {"$set": {"status": "available"}}
+                {"_id": ObjectId(vehicle_id)},
+                {"$set": {"status": new_vehicle_status}}
             )
+        
+        completed_bookings = await booking_collection.find({
+            "vehicle_id": vehicle_id,
+            "end_date": {"$lt": current_time},
+            "status": "confirmed"
+        }).to_list(None)
+        
+        for booking in completed_bookings:
+            await booking_collection.update_one(
+                {"_id": ObjectId(booking["_id"])},
+                {"$set": {"status": "completed"}}
+            )
+
 

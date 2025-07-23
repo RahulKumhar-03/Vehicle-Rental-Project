@@ -25,7 +25,7 @@ class VehicleCreate(VehicleBase):
 
 class Vehicle(VehicleBase):
     id: Optional[str] = None
-    status: str = "available"
+    status: str = "Available"
     last_maintenance: Optional[datetime] = None
     next_maintenance: Optional[datetime] = None
 
