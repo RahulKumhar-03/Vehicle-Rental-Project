@@ -17,7 +17,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class VehicleListComponent implements OnInit {
 
-  isCreating: boolean = false
   bookingModalOpened: boolean = false
   vehicleModalOpened: boolean = false
   selectedVehicle: Vehicle | null = null

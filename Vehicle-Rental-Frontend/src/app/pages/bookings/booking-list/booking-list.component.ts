@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
-import { BookingFormComponent } from '../booking-form/booking-form.component';
 import { EditBookingModalComponent } from '../edit-booking-modal/edit-booking-modal.component';
 
 @Component({

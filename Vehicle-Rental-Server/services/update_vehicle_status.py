@@ -5,7 +5,7 @@ from bson import ObjectId
 async def update_vehicle_status():
     current_time = datetime.utcnow()
     
-    current_time -= timedelta(hours=5, minutes=30)  # Adjust for IST to UTC
+    current_time -= timedelta(hours=5, minutes=30)  
     
     vehicles = await vehicle_collection.find().to_list(None)
     
@@ -19,8 +19,8 @@ async def update_vehicle_status():
             "status": "confirmed"
         }).to_list(None)
         
-        
         new_vehicle_status = "available"
+        
         if active_bookings:
             new_vehicle_status = "rented"
         elif vehicle.get("status") == "maintenance":

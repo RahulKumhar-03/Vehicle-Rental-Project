@@ -13,13 +13,17 @@ router = APIRouter()
 async def create_maintenance(maintenance: MaintenanceCreate, currentUser: User = Depends(get_current_user)):
     if currentUser.role != "admin":
         raise HTTPException(status_code=403, detail="Management Privileges restricted to admins only")
+    
     maintenance_dict = maintenance.dict()
+    vehicle = await vehicle_collection.find_one({"_id": ObjectId(maintenance.vehicle_id)})
+    if not vehicle: 
+        raise HTTPException(status_code=400, detail="Vehicle Not Found")
+    
     result = await maintenance_collection.insert_one(maintenance_dict)
 
-    vehicle = await vehicle_collection.find_one({"_id": ObjectId(maintenance.vehicle_id)})
     await vehicle_collection.update_one(
         {"_id": ObjectId(maintenance.vehicle_id)},
-        {"$set": {"last_maintenance": vehicle["next_maintenance"]}} #on scheduling new maintenance for the particular vehicle last maintenance date is assigned to next_maintenance and new maintenance date is given to next_maintenance
+        {"$set": {"last_maintenance": vehicle["next_maintenance"]}} 
     )
 
     await vehicle_collection.update_one(
@@ -30,15 +34,16 @@ async def create_maintenance(maintenance: MaintenanceCreate, currentUser: User =
     maintenance_dict["id"] = str(result.inserted_id)
     return Maintenance(**maintenance_dict)
 
-@router.get("/", response_model=List[Vehicle])
+@router.get("/", response_model=List[Maintenance])
 async def get_all_maintenance():
-    return await maintenance_check_alerts()
+    maintenances = await maintenance_collection.find().to_list(None)
+    return [Maintenance(**{**maintenance, "id": str(maintenance["_id"])}) for maintenance in maintenances]
 
 @router.put("/{maintenance_id}", response_model=Maintenance)
 async def update_maintenance(maintenance_id: str, maintenance:MaintenanceCreate, currentUser: User = Depends(get_current_user)):
     if currentUser.role != "admin":
         raise HTTPException(staus_code=403, detail="Management Privileges restricted to Admin's only")
-    
+
     result = await maintenance_collection.update_one(
         {"_id": ObjectId(maintenance_id)},
         {"$set": maintenance.dict()}

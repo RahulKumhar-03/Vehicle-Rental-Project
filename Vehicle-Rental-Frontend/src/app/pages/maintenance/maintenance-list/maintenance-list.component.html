@@ -1,1 +1,37 @@
-<p>maintenance-list works!</p>
+<div class="container mx-auto p-4">
+    <div class="mb-4">
+        <button (click)="openMaintenanceModal()" class="border border-gray-600 hover:bg-white hover:text-black py-2 px-3 rounded-lg">
+            Add Vehicle
+        </button>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-10">
+        <div class="rounded-lg border border-gray-600 p-4" *ngFor="let maintenance of maintenances">
+
+            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">ID: {{maintenance.id}}</h3>
+            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">Vehicle ID: {{maintenance.vehicle_id}}</h3>
+            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">Model: {{maintenance.vehicle_name}}</h3>
+            <p class="text-lg px-4 pt-1">Maintenance Date: {{maintenance.maintenance_date | date: 'mediumDate'}}</p>
+            <p class="text-lg px-4 pt-1">Status: {{maintenance.status}}</p>
+
+            <div class="flex justify-evenly">
+                <div class="space-x-4 ">
+                    <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
+                        (click)="openMaintenanceModal(maintenance)"
+                    >
+                    Edit
+                    </button>
+                    <button (click)="maintenance.id && deleteMaintenance(maintenance.id)"
+                        class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+                    >
+                    Delete
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <app-maintenance-form
+        *ngIf="maintenanceModalOpened"
+        [maintenance] = "selectedMaintenance!"
+        (close) = "closeMaintenanceModal($event)"
+    ></app-maintenance-form>
+</div>

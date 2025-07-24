@@ -39,6 +39,7 @@ export interface Maintenance{
     id?: string
     maintenance_date: string
     vehicle_id: string
+    vehicle_name: string
     description: string
     status: string
     cost?: number

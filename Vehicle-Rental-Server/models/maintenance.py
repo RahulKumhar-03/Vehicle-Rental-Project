@@ -4,6 +4,7 @@ from typing import Optional
 
 class MaintenanceBase(BaseModel):
     vehicle_id: str
+    vehicle_name: str
     description: str
     maintenance_date: datetime
 
