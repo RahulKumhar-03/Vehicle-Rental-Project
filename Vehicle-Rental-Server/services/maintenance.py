@@ -4,11 +4,12 @@ from models.vehicle import Vehicle
 from bson import ObjectId
 from typing import List
 from datetime import datetime, timedelta
+from plyer import notification
 
 async def maintenance_check_alerts() -> List[Maintenance]:
     current_date = datetime.utcnow()
     threshold_date = datetime.utcnow() + timedelta(days=2)
-    vehicles_due_for_maintenance = await vehicle_collection.find({"next_maintenance": {"$gte": current_date}}).to_list(None)
+    #vehicles_due_for_maintenance = await vehicle_collection.find({"next_maintenance": {"$gte": current_date}}).to_list(None)
     maintenance_records = []
 
     #for vehicle in vehicles_due_for_maintenance:
@@ -36,6 +37,13 @@ async def maintenance_check_alerts() -> List[Maintenance]:
             await vehicle_collection.update_one(
                 {"_id": ObjectId(maintenance["vehicle_id"])},
                 {"$set": {"status": "maintenance"}}
+            )
+        elif vehicle["status"] == 'rented':
+            notification.notify(
+                title='Maintenance Alert',
+                message=f"{vehicle["model"]} currently rented for date {maintenance.start_date}",
+                app_name="main",
+                timeout=5
             )
 
     completed_maintenances = await maintenance_collection.find({"maintenance_date": {"$lt": datetime.utcnow()}}).to_list(None)
