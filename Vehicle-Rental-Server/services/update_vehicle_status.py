@@ -5,7 +5,7 @@ from bson import ObjectId
 async def update_vehicle_status():
     current_time = datetime.utcnow()
     
-    current_time -= timedelta(hours=5, minutes=30)  
+    #current_time -= timedelta(hours=5, minutes=30)  
     
     vehicles = await vehicle_collection.find().to_list(None)
     

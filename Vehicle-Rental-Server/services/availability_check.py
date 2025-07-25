@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 from config.database import vehicle_collection, booking_collection
-from bson import ObjectId
 from typing import List, Optional
 from models.vehicle import Vehicle
 
@@ -9,7 +8,9 @@ async def check_availability(start_date: Optional[datetime] = None, end_date: Op
     if vehicle_type:
         query["type"] = vehicle_type
     
-    vehicles = await vehicle_collection.find(query).to_list(None)
+    vehicles = await vehicle_collection.find({
+        "type": vehicle_type
+    }).to_list(None)
     available_vehicles = []
 
     current_date = datetime.utcnow()

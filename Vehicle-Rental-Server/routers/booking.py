@@ -5,6 +5,7 @@ from routers.auth import get_current_user, User
 from typing import List
 from config.database import booking_collection, vehicle_collection, user_collection
 from datetime import timedelta
+from plyer import notification
 
 router = APIRouter()
 
@@ -49,6 +50,12 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
     
     vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking.vehicle_id)})
     if not vehicle or vehicle["status"] != "available":
+        notification.notify(
+            title='Booking Alert',
+            message=f"{booking.vehicle_name} not available for selected dates {booking.start_date}",
+            app_name="main",
+            timeout=5
+        )
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
     
     if vehicle["next_maintenance"] and booking.end_date >= vehicle["next_maintenance"] - timedelta(days=2):

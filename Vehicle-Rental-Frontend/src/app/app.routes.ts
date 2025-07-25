@@ -25,10 +25,6 @@ export const routes: Routes = [
         .then(m => m.VehicleFormComponent), canActivate:[adminGuard]
     },
     {
-        path: 'vehicle/{id}', loadComponent: () => import('./pages/vehicle-detail/vehicle-detail.component')
-        .then(m => m.VehicleDetailComponent)
-    },
-    {
         path: 'maintenance-list', loadComponent: () => import('./pages/maintenance/maintenance-list/maintenance-list.component')
         .then(m => m.MaintenanceListComponent), canActivate:[adminGuard]
     },
