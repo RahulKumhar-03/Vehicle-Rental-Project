@@ -1,8 +1,14 @@
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto overscroll-contain">
   <div class="vehicle-form-container max-w-md mx-auto p-6 bg-white shadow-lg rounded mt-12">
-    <h2 class="text-2xl font-bold text-gray-800 mb-4 text-center">
-      Add Vehicle
-    </h2>
+    <div class="flex space-x-4 justify-center pb-2">
+      <img width="40" height="30" src="https://img.icons8.com/ios-filled/50/car-service.png" alt="car-service"/>
+      <h2 class="text-2xl font-bold text-gray-800 mt-1">
+        Add Maintenance
+      </h2>
+    </div>
+    <div class="text-sm text-gray-400 font-semibold py-2">
+      Please fillout the maintenance form carefully.
+    </div>
     <form [formGroup]="maintenanceForm" (ngSubmit)="onSubmit()" class="space-y-4 text-black">
       <div class="flex space-x-4">
         <div>
@@ -10,11 +16,13 @@
           <input
             type="text"
             id="vehicle_id"
+            placeholder="Eg. 687490269ceacae7e8c55fd4"
             formControlName="vehicle_id"
             class="w-full p-2 border border-gray-300 rounded"
             required
             [disabled]="isEditMode"
           />
+          <p class="py-1 text-xs text-gray-600">{{ isEditMode ? 'Input Disabled' : 'ID should be same as in database'}}</p>
         </div>
         <div>
           <label for="vehicle_name" class="block text-gray-700 text-sm font-bold mb-2">Vehicle Model</label>
@@ -23,49 +31,55 @@
             id="vehicle_name"
             formControlName="vehicle_name"
             class="w-full p-2 border border-gray-300 rounded"
-            placeholder="Enter license plate number"
+            placeholder="Eg. BMW M4 CS"
             [disabled]="isEditMode"
             required
           />
+          <p class="py-1 text-xs text-gray-600">{{ isEditMode ? 'Input Disabled' : 'Model Name should be same as in database'}}</p>
         </div>
       </div>
       <div class="flex space-x-4">
-        <div>
+        <div class="w-1/2">
           <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Maintenance Date</label>
           <input
             type="date"
             id="date"
+            placeholder="Date of Maintenance"
             formControlName="maintenance_date"
             class="w-full p-2 border border-gray-300 rounded"
             required
             [min]="currentDate"
           />
+          <p class="py-1 text-xs text-gray-600">Should be greater than Current date</p>
         </div>
-        <div>
+        <div class="w-1/2">
           <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Description</label>
           <input
-            type="text"
+            type="textarea"
             id="description"
+            placeholder="Eg. Scheduled maintenance for model name"
             formControlName="description"
             class="w-full p-2 border border-gray-300 rounded"
             required
           />
         </div>
       </div>
-      <button
-        type="submit"
-        [disabled]="maintenanceForm.invalid"
-        class="w-full bg-blue-600 p-2 rounded hover:bg-blue-700 transition text-white"
-      >
-        {{ isEditMode ? 'Update' : 'Add' }}
-      </button>
-      <button
-        type="button"
-        (click)="closeModal()"
-        class="w-full bg-gray-500 text-white p-2 rounded hover:bg-gray-600 transition mt-2"
-      >
-        Cancel
-      </button>
+      <div class="flex space-x-4 justify-end">
+        <button
+          type="submit"
+          [disabled]="maintenanceForm.invalid"
+          class="bg-blue-600 rounded hover:bg-blue-700 transition text-white px-4 py-2"
+        >
+          {{ isEditMode ? 'Update' : 'Add' }}
+        </button>
+        <button
+          type="button"
+          (click)="closeModal()"
+          class="bg-gray-500 text-white rounded hover:bg-gray-600 transition px-4"
+        >
+          Cancel
+        </button>
+      </div>
     </form>
   </div>
 </div>

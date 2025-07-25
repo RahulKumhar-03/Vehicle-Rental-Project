@@ -26,10 +26,10 @@ export class VehicleFormComponent {
       type: [{value: '', disabled: false}, [Validators.required, Validators.maxLength(20)]],
       rental_rate: [0,[ Validators.required, Validators.min(5000)]],
       imageUrl: [''],
-      license_plate_no: ['',[Validators.required, Validators.maxLength(20)]],
-      gearType: [''],
+      license_plate_no: [{value: '', disabled: false},[Validators.required, Validators.maxLength(20)]],
+      gearType: [{value: '', disabled: false}, Validators.required],
       description: [''],
-      range: [''],
+      range: ['', Validators.required],
       location:['', [Validators.required, Validators.maxLength(100)]],
       next_maintenance:['']
     })
@@ -50,9 +50,13 @@ export class VehicleFormComponent {
       })
       this.vehicleForm.get('model')?.disable()
       this.vehicleForm.get('type')?.disable()
+      this.vehicleForm.get('license_plate_no')?.disable()
+      this.vehicleForm.get('gearType')?.disable()
     } else {
       this.vehicleForm.get('model')?.enable()
       this.vehicleForm.get('type')?.enable()
+      this.vehicleForm.get('license_plate_no')?.enable()
+      this.vehicleForm.get('gearType')?.enable()
     }
   }
 
@@ -104,22 +108,4 @@ export class VehicleFormComponent {
   closeModal(): void{
     this.close.emit(false)
   }
-
-  /*onFileSelected(event: any): void {
-    this.selectedFile = event.target.files[0];
-    if (this.selectedFile) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        vehicle.imageUrl = reader.result as string; // Base64 string
-      };
-      reader.readAsDataURL(this.selectedFile);
-    }
-  }
-
-  createVehicle(){
-    this.vehicleService.createVehicle(vehicle).subscribe({
-      next: () => setTimeout(() => this.close.emit(),1500),
-      error: (err) => console.error('Error while creating vehicle!!! : ', err)
-    })
-  } */
 }

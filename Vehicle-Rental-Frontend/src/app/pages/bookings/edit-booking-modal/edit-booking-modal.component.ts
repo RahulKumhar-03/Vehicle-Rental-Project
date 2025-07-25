@@ -12,12 +12,12 @@ import { AuthService } from 'src/app/services/auth/auth.service';
   styleUrls: ['./edit-booking-modal.component.css']
 })
 export class EditBookingModalComponent {
-  @Input() booking!: Booking; // Required booking data
-  @Input() vehicle!: Vehicle; // Required vehicle data
+  @Input() booking!: Booking; 
+  @Input() vehicle!: Vehicle; 
   @Output() close = new EventEmitter<any>();
 
   editForm: FormGroup;
-  currentDate: string = new Date().toISOString().split('T')[0]; // Normalize to date string
+  currentDate: string = new Date().toISOString().split('T')[0];
 
   constructor(private fb: FormBuilder, private authService: AuthService) {
     this.editForm = this.fb.group({

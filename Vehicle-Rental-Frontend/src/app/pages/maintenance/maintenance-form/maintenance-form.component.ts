@@ -34,7 +34,6 @@ export class MaintenanceFormComponent {
       this.maintenanceForm.patchValue({
         vehicle_id: this.maintenance.vehicle_id,
         vehicle_name: this.maintenance.vehicle_name,
-        description: this.maintenance.description,
         maintenance_date: this.maintenance.maintenance_date,
       })
       this.maintenanceForm.get('vehicle_id')?.disable()

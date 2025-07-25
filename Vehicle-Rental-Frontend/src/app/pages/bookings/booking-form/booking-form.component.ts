@@ -21,8 +21,8 @@ export class BookingFormComponent {
 
   constructor(private fb: FormBuilder, private authService: AuthService){
     this.bookingForm = this.fb.group({
-      start_date: ['', Validators.required], //Validators.pattern(/^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-(20)\d{2}$/)]],
-      end_date: ['', Validators.required], //Validators.pattern(/^(0[1-9]|[1-2][0-9]|3[0-1])-(0[1-9]|1[0-2])-\d{4}$/)]]
+      start_date: ['', Validators.required], 
+      end_date: ['', Validators.required], 
     })
   }
 

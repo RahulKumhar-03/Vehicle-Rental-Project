@@ -1,17 +1,30 @@
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
     <div class="bg-white p-6 rounded-lg w-full max-w-md">
-        <h2 class="text-2xl font-bold mb-4 text-gray-800 text-center">
-            Book {{vehicle.model}}
-        </h2>
+        <div class="flex space-x-4 justify-center pb-2">
+            <img width="40" height="30" src="https://img.icons8.com/dotty/40/calendar-plus.png" alt="tesla-model-3"/>
+            <h2 class="text-2xl font-bold text-gray-800 text-center">
+                Book {{vehicle.model}}
+            </h2>
+        </div>
+        <div class="text-sm text-gray-400 font-semibold py-2">
+            Please fillout the booking form carefully.
+        </div>
         <form [formGroup]="bookingForm" (ngSubmit)="onSubmit()">
             <div class="mb-4">
                 <label class="block text-gray-800">Model</label>
-                <input type="text" class="w-full p-2 border rounded text-black" [value]="vehicle.model" disabled />
+                <input 
+                    type="text" 
+                    class="w-full p-2 border rounded text-black" 
+                    [value]="vehicle.model" 
+                    disabled 
+                />
+                <p class="py-1 text-xs text-gray-600">Input Disabled</p>
             </div>
 
             <div class="mb-4">
                 <label class="block text-gray-800">Rental Rate</label>
                 <input type="number" class="w-full p-2 border rounded text-black" [value]="vehicle.rental_rate" disabled />
+                <p class="py-1 text-xs text-gray-600">Input Disabled</p>
             </div>
 
             <div class="mb-4">
@@ -23,11 +36,13 @@
                     formControlName="start_date" 
                     required 
                 />
+                <p class="py-1 text-xs text-gray-600">Should be greater than Current date</p>
             </div>
 
             <div class="mb-4">
                 <label class="block text-gray-800">End Date</label>
                 <input type="date" [min]="currentDate" class="w-full p-2 border rounded text-black" formControlName="end_date" required />
+                <p class="py-1 text-xs text-gray-600">Should be greater than Current date</p>
             </div>
 
             <div class="flex justify-end">

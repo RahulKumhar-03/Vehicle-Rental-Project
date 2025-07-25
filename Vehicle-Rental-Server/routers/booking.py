@@ -4,12 +4,11 @@ from bson import ObjectId
 from routers.auth import get_current_user, User
 from typing import List
 from config.database import booking_collection, vehicle_collection, user_collection
-from datetime import timedelta
 from plyer import notification
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Booking]) #Reading all the bookings based on the role of the user
+@router.get("/", response_model=List[Booking]) 
 async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> List[Booking]:
     if currentUser.role == "admin":
         bookings = await booking_collection.find().to_list(None)
@@ -18,7 +17,6 @@ async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> Lis
             vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking["vehicle_id"])})
             user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
             user_name = booking.get("user_name") or (user.get("name") if user else None)
-            ## user = await user_collection.find_one({"_id": ObjectId(booking["user_id"])})
             booking_dict = {
                 **booking,
                 "id": str(booking["_id"]),
@@ -57,9 +55,6 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
             timeout=5
         )
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
-    
-    if vehicle["next_maintenance"] and booking.end_date >= vehicle["next_maintenance"] - timedelta(days=2):
-        raise HTTPException(status_code=400, detail="Booking too close to scheduled maintenance")
 
     conflict = await booking_collection.count_documents({
         "vehicle_id": ObjectId(booking.vehicle_id),

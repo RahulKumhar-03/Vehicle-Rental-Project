@@ -6,7 +6,6 @@ from models.user import User, UserCreate
 from datetime import datetime
 from config.settings import settings
 from config.database import user_collection
-# from config.database import blacklist_tokens_collection
 from bson import ObjectId
 from datetime import datetime, timedelta
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -45,11 +44,6 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         return User(**user_dict)
     except jwt.PyJWTError:
         raise HTTPException(status_code=401, detail="Invalid token")
-    '''
-    blacklisted = await blacklist_tokens_collection.find_one({"token":token})
-    if blacklisted:
-        raise HTTPException(status_code=401, detail="Token has been blacklisted")
-    '''
     
     
 @router.post("/register", response_model=RegisterResponse)
@@ -123,22 +117,3 @@ async def loginUser(credentials: LoginCredentials):
 @router.get('/profile', response_model=User)
 async def get_profile(current_user: User = Depends(get_current_user)):
     return current_user
-
-'''
-@router.post("/logout")
-async def logoutUser(request: Request, token: str = Depends(oauth2)):
-    # trying to get token from Authorization header
-    auth_header = request.headers.get("authorization")
-    if auth_header and auth_header.lower().startswith("bearer "):
-        token = auth_header.split(" ", 1)[1]
-    # If the token not found in the header, use token passed in the function's parameter
-    if not token:
-        return {"Message": "No token provided, but logout successful (stateless)."}
-    existing = await blacklist_tokens_collection.find_one({"token": token})
-    if not existing:
-        await blacklist_tokens_collection.insert_one({
-            "token": token,
-            "blacklisted_at": datetime.utcnow()
-        })
-    return {"Message": "User Successfully Logged Out"}
-'''

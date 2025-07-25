@@ -3,7 +3,6 @@ from config.database import maintenance_collection, vehicle_collection
 from services.maintenance import maintenance_check_alerts
 from bson import ObjectId
 from models.maintenance import Maintenance, MaintenanceCreate
-from models.vehicle import Vehicle
 from routers.auth import get_current_user, User
 from typing import List
 

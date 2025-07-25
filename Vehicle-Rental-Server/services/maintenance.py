@@ -7,23 +7,9 @@ from datetime import datetime, timedelta
 from plyer import notification
 
 async def maintenance_check_alerts() -> List[Maintenance]:
-    current_date = datetime.utcnow()
     threshold_date = datetime.utcnow() + timedelta(days=2)
-    #vehicles_due_for_maintenance = await vehicle_collection.find({"next_maintenance": {"$gte": current_date}}).to_list(None)
+
     maintenance_records = []
-
-    #for vehicle in vehicles_due_for_maintenance:
-        #maintenance = ({
-            #"vehicle_id": str(vehicle["_id"]),
-            #"vehicle_name": vehicle["model"],
-            #"maintenance_date": vehicle['next_maintenance'],
-            #"description": f"Scheduled maintenance for {vehicle['model']}",
-            #"status": "scheduled"
-        #})
-
-        #result = await maintenance_collection.insert_one(maintenance)
-        #maintenance["id"] = str(result.inserted_id)
-        #maintenance_records.append(Maintenance(**maintenance))
 
     upcoming_maintenances = await maintenance_collection.find({
         "maintenance_date": {"$lte": threshold_date},

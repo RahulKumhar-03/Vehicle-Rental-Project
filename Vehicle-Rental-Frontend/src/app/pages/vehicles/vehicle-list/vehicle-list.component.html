@@ -1,28 +1,11 @@
 <div class="container mx-auto p-4">
-    <!--Admin vehicle creation and update button-->
+    
     <div class="mb-4" *ngIf="authService.isAdmin()">
         <button (click)="openVehicleModal()" class="border border-gray-600 hover:bg-white hover:text-black py-2 px-3 rounded-lg">
             Add Vehicle
         </button>
     </div>
-    <!--
-    <div class="serachBar  justify-evenly p-4 mb-6" *ngIf="authService.isCustomer()">
-        <form action="" [formGroup]="searchForm" class="flex gap-8 justify-center">
-            <input type="date" [min]="currentDate" formControlName="start_date" placeholder="Start Date" class="rounded-lg border border-gray-100 p-2 text-black">
-            <input type="date" [min]="currentDate" formControlName="end_date" placeholder="End Date" class="rounded-lg border border-gray-100 p-2 text-black">
-            <select id="type" formControlName="vehicle_type" placeholder="Select Car Type" class="text-black border border-gray-100 rounded-lg px-2">
-                <option value="">Car Types</option>
-                <option value="Sedan">Sedan</option>
-                <option value="convertible">Convertible</option>
-                <option value="Sports">Sports</option>
-                <option value="suv">SUV</option>
-                <option value="off-roader">Off Roader</option>
-                <option value="coupe">Coupe</option>
-                <option value="hatchback">Hatchback</option>
-            </select>
-        </form>
-    </div>
-    -->
+    
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
         <div class="rounded-lg border border-gray-600 p-4" *ngFor="let vehicle of vehicles">
             <h3 class="text-xl font-semibold px-4 pt-1 pb-2">{{vehicle.model}}</h3>

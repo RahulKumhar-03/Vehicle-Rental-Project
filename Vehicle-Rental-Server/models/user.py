@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr, validator
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 
 class UserBase(BaseModel):
@@ -7,7 +7,7 @@ class UserBase(BaseModel):
     email: EmailStr
     address: str
     
-class UserCreate(UserBase): #used while creating a new user
+class UserCreate(UserBase): 
     password: str      
 
 class User(UserBase):

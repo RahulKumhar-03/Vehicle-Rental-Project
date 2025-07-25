@@ -4,6 +4,7 @@ import { BookingService } from 'src/app/services/booking/booking.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
 import { EditBookingModalComponent } from '../edit-booking-modal/edit-booking-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking-list',
@@ -19,7 +20,7 @@ export class BookingListComponent implements OnInit {
   selectedBooking: Booking | null = null
   selectedVehicle: Vehicle | null = null
 
-  constructor(private bookingService: BookingService, public authService: AuthService) {}
+  constructor(private bookingService: BookingService, public authService: AuthService, private router: Router) {}
 
   ngOnInit(): void{
     this.loadBookings()
@@ -75,7 +76,10 @@ export class BookingListComponent implements OnInit {
     if (bookingData) {
       if (this.selectedBooking) {
         this.bookingService.updateBooking(this.selectedBooking.id!, bookingData).subscribe({
-          next: () => this.loadBookings(),
+          next: () => {
+            this.loadBookings();
+            this.router.navigate(['/booking'])
+          },
           error: (err) => console.error('Error while updating the booking!', err),
         });
       }
