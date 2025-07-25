@@ -44,7 +44,7 @@ export class LoginRegisterComponent {
           next: (response) => {
             if(response.access_token){
               this.showMessage('Login Successful!', 'success')
-              setTimeout(() => this.closeModal.emit(),1500);
+              setTimeout(() => this.closeModal.emit(),1000);
             } else {
               this.showMessage('Invalid Login Response', 'error');
             }

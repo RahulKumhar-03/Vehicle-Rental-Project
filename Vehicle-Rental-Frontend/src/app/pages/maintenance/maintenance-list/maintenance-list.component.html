@@ -8,8 +8,8 @@
         <div class="rounded-lg border border-gray-600 p-4" *ngFor="let maintenance of maintenances">
 
             <h3 class="text-xl font-semibold px-4 pt-1 pb-2">ID: {{maintenance.id}}</h3>
+            <h3 class="text-2xl font-bold px-4 pt-1 pb-2">Model: {{maintenance.vehicle_name}}</h3>
             <h3 class="text-xl font-semibold px-4 pt-1 pb-2">Vehicle ID: {{maintenance.vehicle_id}}</h3>
-            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">Model: {{maintenance.vehicle_name}}</h3>
             <p class="text-lg px-4 pt-1">Maintenance Date: {{maintenance.maintenance_date | date: 'mediumDate'}}</p>
             <p class="text-lg px-4 pt-1">Status: {{maintenance.status}}</p>
 
