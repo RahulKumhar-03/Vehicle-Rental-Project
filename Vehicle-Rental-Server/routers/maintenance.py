@@ -1,10 +1,11 @@
 from fastapi import APIRouter, HTTPException, Depends
 from config.database import maintenance_collection, vehicle_collection
-from services.maintenance import maintenance_check_alerts
 from bson import ObjectId
 from models.maintenance import Maintenance, MaintenanceCreate
 from routers.auth import get_current_user, User
 from typing import List
+from datetime import datetime, timedelta
+from plyer import notification
 
 router = APIRouter()
 
@@ -17,6 +18,24 @@ async def create_maintenance(maintenance: MaintenanceCreate, currentUser: User =
     vehicle = await vehicle_collection.find_one({"_id": ObjectId(maintenance.vehicle_id)})
     if not vehicle: 
         raise HTTPException(status_code=400, detail="Vehicle Not Found")
+    
+    current_date = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    maintenance_threshold = maintenance.maintenance_date - timedelta(days=2)
+    
+    if maintenance_threshold.date() == current_date.date():
+        if vehicle["status"] != "rented":
+            await vehicle_collection.update_one(
+                {"_id": ObjectId(maintenance.vehicle_id)},
+                {"$set": {"status": "maintenance"}}
+            )
+        else:
+            notification.notify(
+                title='Maintenance Alert',
+                message=f"{vehicle['model']} currently rented for date {maintenance.maintenance_date}",
+                app_name="main",
+                timeout=5
+            )
     
     result = await maintenance_collection.insert_one(maintenance_dict)
 

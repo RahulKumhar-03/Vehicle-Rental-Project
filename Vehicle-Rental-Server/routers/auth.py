@@ -12,6 +12,7 @@ from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from models.loginResponse import LoginResponse
 from models.registerResponse import RegisterResponse
 from models.credentials import LoginCredentials
+from plyer import notification
 
 router = APIRouter()
 
@@ -101,7 +102,14 @@ async def loginUser(credentials: LoginCredentials):
     user = await user_collection.find_one({"email": credentials.email})
 
     if not user or not check_password(credentials.password, user["password"]):
+        notification.notify(
+            title='Login Alert',
+            message="No User Found!! Please register first.",
+            app_name="main",
+            timeout=1
+        )
         raise HTTPException(status_code=401, detail="Invalid email or password. Please Register!!")
+
     
     token = create_jwt_token(data={"sub": str(user["_id"])})
 
