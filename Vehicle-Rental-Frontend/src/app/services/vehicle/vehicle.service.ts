@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { apiUrl } from 'src/environments/environment';
 import { Vehicle } from 'src/Schemas/interfaces';
@@ -10,7 +9,7 @@ import { Vehicle } from 'src/Schemas/interfaces';
 export class VehicleService {
   private apiUrl = `${apiUrl}/vehicle`
 
-  constructor(private http: HttpClient, private router: Router) { }
+  constructor(private http: HttpClient) { }
 
   getVehicles(): Observable<Vehicle[]>{
     return this.http.get<Vehicle[]>(`${this.apiUrl}/`)

@@ -78,13 +78,14 @@ export class VehicleFormComponent {
         const updateData = {
           model: this.vehicle.model!,
           type: this.vehicle.type!,
-          license_plate_no: this.vehicleForm.value.license_plate_no,
+          license_plate_no: this.vehicle.license_plate_no!,
           rental_rate: this.vehicleForm.value.rental_rate,
           imageUrl: this.vehicleForm.value.imageUrl || null,
           gearType: this.vehicleForm.value.gearType || null,
           description: this.vehicleForm.value.description || null,
           range: this.vehicleForm.value.range || null,
           location: this.vehicleForm.value.location,
+          status: this.vehicleForm.value.status
         }
         this.vehicleService.updateVehicle(this.vehicle.id, updateData).subscribe({
           next: () => {

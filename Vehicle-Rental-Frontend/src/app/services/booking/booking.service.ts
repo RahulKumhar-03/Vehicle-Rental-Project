@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable} from 'rxjs';
+import { catchError, Observable, throwError} from 'rxjs';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
 import { apiUrl } from 'src/environments/environment';
 
@@ -42,7 +42,12 @@ export class BookingService {
     }
     return this.http.post<Booking>(`${this.apiUrl}/booking/`, bookingData, {
       headers: new HttpHeaders({Authorization: `Bearer ${token}`}),
-    })
+    }).pipe(
+      catchError(error => {
+        console.error('Error creating booking',error);
+        return throwError(() => ({message: error.error?.detail || "Error creating booking"}));
+      })
+    )
   }
 
   deleteBooking(booking_id: string): Observable<void>{

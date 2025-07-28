@@ -50,8 +50,8 @@ export class BookingFormComponent {
         return;
       }
 
-      const utcStartDate = new Date(startDateValue + 'T00:00:00Z').toISOString();
-      const utcEndDate = new Date(endDateValue + 'T00:00:00Z').toISOString();
+      const utcStartDate = new Date(startDateValue + 'T00:00:00Z')
+      const utcEndDate = new Date(endDateValue + 'T00:00:00Z')
 
       const bookingData = {
         vehicle_id: this.vehicle.id!,

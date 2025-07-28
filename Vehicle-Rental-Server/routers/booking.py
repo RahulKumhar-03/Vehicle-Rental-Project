@@ -5,6 +5,7 @@ from routers.auth import get_current_user, User
 from typing import List
 from config.database import booking_collection, vehicle_collection, user_collection
 from plyer import notification
+from datetime import datetime
 
 router = APIRouter()
 
@@ -55,7 +56,7 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
             timeout=5
         )
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
-    
+
     conflict = await booking_collection.find_one({
         "vehicle_id": ObjectId(booking.vehicle_id),
         "$and" :[
