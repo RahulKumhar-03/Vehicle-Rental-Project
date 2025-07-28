@@ -6,12 +6,11 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
 import { BookingFormComponent } from '../../bookings/booking-form/booking-form.component';
 import { BookingService } from 'src/app/services/booking/booking.service';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
-  imports: [CommonModule, VehicleFormComponent, BookingFormComponent, ReactiveFormsModule],
+  imports: [CommonModule, VehicleFormComponent, BookingFormComponent],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css']
 })
@@ -21,31 +20,16 @@ export class VehicleListComponent implements OnInit {
   vehicleModalOpened: boolean = false
   selectedVehicle: Vehicle | null = null
   vehicles: Vehicle[] = []
-  searchForm: FormGroup;
   currentDate: string = new Date().toISOString()
 
   constructor( 
     public vehicleService: VehicleService,
     public authService: AuthService,
     public bookingService: BookingService,
-    private fb: FormBuilder
-  ){
-    this.searchForm = this.fb.group({
-      start_date: ['', Validators.required],
-      end_date: ['', Validators.required],
-      vehicle_type: ['']
-    })
-  }
+  ){}
 
   ngOnInit():void{
     this.loadVehicles();
-    this.searchForm.valueChanges.subscribe((values) => {
-      if(!values.start_date && !values.end_date && !values.vehicle_type){
-        this.loadVehicles();
-      } else {
-        this.filterVehicles();
-      }
-    })
   }
   loadVehicles():void{
     this.vehicleService.getVehicles().subscribe({
@@ -101,23 +85,5 @@ export class VehicleListComponent implements OnInit {
         error: (err) => console.error('Error while deleting vehicle: ',err)
       })
     }
-  }
-
-  filterVehicles(): void {
-    const { start_date, end_date, vehicle_type } = this.searchForm.value;
-    const params: { start_date?: string; end_date?: string; vehicle_type?: string } = {};
-    if (start_date) params.start_date = start_date;
-    if (end_date) params.end_date = end_date;
-    if (vehicle_type) params.vehicle_type = vehicle_type;
-
-    this.vehicleService.getAvailableVehicles(params).subscribe({
-      next: (vehicles) => {
-        this.vehicles = vehicles;
-      },
-      error: (err) => {
-        console.error('Error filtering vehicles:', err);
-        this.vehicles = [];
-      },
-    });
   }
 }

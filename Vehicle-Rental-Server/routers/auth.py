@@ -1,6 +1,6 @@
 import jwt
 import bcrypt
-from fastapi import APIRouter, HTTPException, Depends, Request
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.security import OAuth2PasswordBearer
 from models.user import User, UserCreate
 from datetime import datetime

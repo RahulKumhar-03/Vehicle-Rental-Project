@@ -20,7 +20,7 @@
             <div class="buttons flex space-x-4 justify-center pt-3" *ngIf="!authService.isAdmin()">
                 <button 
                     class="border border-gray-200 text-white px-6 rounded py-2 h-10"
-                    (click)="openBookingModal(booking)"
+                    (click)="openEditBookingModal(booking)"
                 >
                     Edit
                 </button>

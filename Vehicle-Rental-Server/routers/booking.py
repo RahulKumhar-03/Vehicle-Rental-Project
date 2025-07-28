@@ -55,13 +55,21 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
             timeout=5
         )
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
-
-    conflict = await booking_collection.count_documents({
+    
+    conflict = await booking_collection.find_one({
         "vehicle_id": ObjectId(booking.vehicle_id),
-        "$or" :[{"start_date": {"$lte": booking.end_date}, "end_date":{"$gte": booking.start_date}}]
+        "$and" :[
+            {"start_date": {"$lte": booking.end_date}}, 
+            {"end_date":{"$gte": booking.start_date}}
+        ]
     })
-
-    if conflict > 0:
+    if conflict:
+        notification.notify(
+            title='Booking Alert',
+            message=f"{booking.vehicle_name} is already booked for selected dates {booking.start_date}",
+            app_name="main",
+            timeout=5
+        )
         raise HTTPException(status_code = 400, detail= "Vehicle is already booked for the selected dates")
     
     booking_dict = booking.dict()

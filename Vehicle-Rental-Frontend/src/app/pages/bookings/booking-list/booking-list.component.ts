@@ -39,7 +39,7 @@ export class BookingListComponent implements OnInit {
         this.isLoading = false
       },
       error: (err) => {
-        console.error('Error while fetching bookings')
+        console.error('Error while fetching bookings',err)
         this.isLoading = false
       }
     })
@@ -54,7 +54,7 @@ export class BookingListComponent implements OnInit {
     }
   }
 
-  async openBookingModal(booking?: Booking): Promise<void>{
+  async openEditBookingModal(booking?: Booking): Promise<void>{
     this.selectedBooking = booking || null;
     if(this.selectedBooking){
       try {

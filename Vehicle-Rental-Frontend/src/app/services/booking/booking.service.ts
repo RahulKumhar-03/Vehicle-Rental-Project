@@ -25,6 +25,7 @@ export class BookingService {
 
   updateBooking(booking_id: string, bookingData: Partial<Booking>): Observable<Booking>{
     const token = this.getToken()
+
     if(!token){
       throw new Error('No Authorization token available')
     }
@@ -35,6 +36,7 @@ export class BookingService {
 
   createBooking(bookingData: {vehicle_id: string; vehicle_name: string; user_id: string; start_date: string; end_date: string}): Observable<Booking>{
     const token = this.getToken()
+
     if(!token){
       throw new Error('No Authorization token available')
     }
@@ -45,6 +47,7 @@ export class BookingService {
 
   deleteBooking(booking_id: string): Observable<void>{
     const token = this.getToken()
+    
     if(!token){
       throw new Error('No Authorization token available')
     }

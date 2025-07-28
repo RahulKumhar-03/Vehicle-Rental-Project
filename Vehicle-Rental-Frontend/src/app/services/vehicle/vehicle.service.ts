@@ -59,18 +59,4 @@ export class VehicleService {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
     });
   }
-
-  getAvailableVehicles(params: {start_date?: string, end_date?: string, vehicle_type?: string}): Observable<Vehicle[]>{
-    let httpParams = new HttpParams();
-    if(params.start_date){
-      httpParams = httpParams.set('start_date', params.start_date)
-    }
-    if(params.end_date){
-      httpParams = httpParams.set('end_date', params.end_date)
-    }
-    if(params.vehicle_type){
-      httpParams = httpParams.set('type',params.vehicle_type)
-    }
-    return this.http.get<Vehicle[]>(`${this.apiUrl}/available`, {params: httpParams})
-  }
 }
