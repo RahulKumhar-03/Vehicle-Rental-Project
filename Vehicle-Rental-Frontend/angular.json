@@ -35,12 +35,13 @@
               "src/assets"
             ],
             "styles": [
-                {
-                  "input": "src/styles.css",
-                  "inject": true,
-                  "bundleName": "styles"
-                }
-              ],
+              "@angular/material/prebuilt-themes/indigo-pink.css",
+              {
+                "input": "src/styles.css",
+                "inject": true,
+                "bundleName": "styles"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
@@ -111,6 +112,7 @@
               "src/assets"
             ],
             "styles": [
+              "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
             "scripts": []

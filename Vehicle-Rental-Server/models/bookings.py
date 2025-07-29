@@ -7,8 +7,8 @@ class BookingBase(BaseModel):
     vehicle_name: str 
     user_id: str
     user_name: Optional[str] = None
-    start_date: datetime
-    end_date: datetime
+    start_date: str 
+    end_date: str 
 
 class BookingCreate(BookingBase):
     pass

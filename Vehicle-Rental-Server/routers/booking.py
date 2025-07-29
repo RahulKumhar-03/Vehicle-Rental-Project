@@ -5,9 +5,16 @@ from routers.auth import get_current_user, User
 from typing import List
 from config.database import booking_collection, vehicle_collection, user_collection
 from plyer import notification
-from datetime import datetime
+from datetime import datetime, timezone
 
 router = APIRouter()
+
+def parse_date(date_str: str) -> datetime:
+    try: 
+        dt = datetime.fromisoformat(date_str.replace("Z","+00:00"))
+        return dt.astimezone(timezone.utc)
+    except ValueError as e:
+        e
 
 @router.get("/", response_model=List[Booking]) 
 async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> List[Booking]:
@@ -24,7 +31,9 @@ async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> Lis
                 "user_id": str(booking["user_id"]),
                 "user_name": user_name,
                 "vehicle_id": str(booking["vehicle_id"]),
-                "vehicle_name": vehicle["model"] if vehicle else "Unknown" 
+                "vehicle_name": vehicle["model"] if vehicle else "Unknown",
+                "start_date": booking["start_date"].isoformat() if isinstance(booking["start_date"], datetime) else booking["start_date"],
+                "end_date": booking["end_date"].isoformat() if isinstance(booking["end_date"], datetime) else booking["end_date"],
             }
             result.append(Booking(**booking_dict))
         return result
@@ -37,7 +46,9 @@ async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> Lis
                 **booking,
                 "id": str(booking["_id"]),
                 "vehicle_id": str(booking["vehicle_id"]),
-                "vehicle_name": vehicle["model"] if vehicle else "Unknown"
+                "vehicle_name": vehicle["model"] if vehicle else "Unknown",
+                "start_date": booking["start_date"].isoformat() if isinstance(booking["start_date"], datetime) else booking["start_date"],
+                "end_date": booking["end_date"].isoformat() if isinstance(booking["end_date"], datetime) else booking["end_date"],
             }
             result.append(Booking(**booking_dict))
         return result
@@ -48,7 +59,7 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
         raise HTTPException(status_code=403, detail="Only customers's can rent vehicles")
     
     vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking.vehicle_id)})
-    if not vehicle or vehicle["status"] != "available":
+    if not vehicle or vehicle.get("status") != "available":
         notification.notify(
             title='Booking Alert',
             message=f"{booking.vehicle_name} not available for selected dates {booking.start_date}",
@@ -57,11 +68,20 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
         )
         raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
 
+    try:
+        start_date = parse_date(booking.start_date)
+        end_date = parse_date(booking.end_date)
+    except HTTPException as e:
+        e
+    
+    start_date_str = start_date.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT00:00:00.000+00:00")
+    end_date_str = end_date.replace(hour=0,minute=0,second=0,microsecond=0).strftime("%Y-%m-%dT00:00:00.000+00:00")
+
     conflict = await booking_collection.find_one({
-        "vehicle_id": ObjectId(booking.vehicle_id),
-        "$and" :[
-            {"start_date": {"$lte": booking.end_date}}, 
-            {"end_date":{"$gte": booking.start_date}}
+        "vehicle_id": booking.vehicle_id,
+        "$and": [
+            {"start_date": {"$lte": end_date_str}}, 
+            {"end_date":{"$gte": start_date_str}}
         ]
     })
     if conflict:
@@ -74,8 +94,11 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
         raise HTTPException(status_code = 400, detail= "Vehicle is already booked for the selected dates")
     
     booking_dict = booking.dict()
+    booking_dict["vehicle_id"] = booking.vehicle_id
+    booking_dict["start_date"] = start_date_str
+    booking_dict["end_date"] = end_date_str
     booking_dict["user_id"] = str(currentUser.id)
-    booking_dict["total_amount"] = vehicle["rental_rate"] * ((booking.end_date - booking.start_date).days + 1)
+    booking_dict["total_amount"] = vehicle["rental_rate"] * ((end_date - start_date).days + 1)
     booking_dict["status"] = "confirmed"
 
     if booking.user_name:
@@ -101,15 +124,30 @@ async def updateBooking(booking_id: str, booking: BookingCreate, currentUser: Us
     if not vehicle or vehicle["status"] != "available":
         raise HTTPException(status_code=400, detail="Vehicle not available")
     
-    conflicting = await booking_collection.count_documents({
-        "vehicle_id": ObjectId(booking.vehicle_id),
-        "_id": {"$ne": ObjectId(booking_id)},
-        "$or": [
-            {"start_date": {"$lte": booking.end_date}, "end_date":{"$gte":booking.start_date}}
+    try:
+        start_date = parse_date(booking.start_date)
+        end_date = parse_date(booking.end_date)
+    except HTTPException as e:
+        e
+    
+    start_date_str = start_date.replace(hour=0, minute=0, second=0, microsecond=0).strftime("%Y-%m-%dT00:00:00.000+00:00")
+    end_date_str = end_date.replace(hour=0,minute=0,second=0,microsecond=0).strftime("%Y-%m-%dT00:00:00.000+00:00")
+
+    conflict = await booking_collection.find_one({
+        "vehicle_id": booking.vehicle_id,
+        "$and": [
+            {"start_date": {"$lte": end_date_str}}, 
+            {"end_date":{"$gte": start_date_str}}
         ]
     })
-    if conflicting > 0:
-        raise HTTPException(status_code=400,detail="Vehicle booked for selected dates")
+    if conflict:
+        notification.notify(
+            title='Booking Alert',
+            message=f"{booking.vehicle_name} is already booked for selected dates {booking.start_date}",
+            app_name="main",
+            timeout=5
+        )
+        raise HTTPException(status_code = 400, detail= "Vehicle is already booked for the selected dates")
     
     booking_dict = booking.dict()
     booking_dict["user_id"] = str(currentUser.id)

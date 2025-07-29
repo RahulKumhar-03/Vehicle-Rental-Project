@@ -1,29 +1,36 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
 import { EditBookingModalComponent } from '../edit-booking-modal/edit-booking-modal.component';
 import { Router } from '@angular/router';
+import {MatTableDataSource, MatTableModule} from '@angular/material/table'
+import {MatPaginator, MatPaginatorModule} from '@angular/material/paginator'
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, EditBookingModalComponent],
+  imports: [CommonModule, EditBookingModalComponent,MatTableModule, MatPaginatorModule],
   templateUrl: './booking-list.component.html',
   styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent implements OnInit {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   bookings: Booking[] = []
   isLoading: boolean = false
   bookingModalOpened: boolean = false
   selectedBooking: Booking | null = null
   selectedVehicle: Vehicle | null = null
 
+  displayedColumns: string[] = ['user_name', 'vehicle_id', 'start_date', 'end_date']
+  dataSource = new MatTableDataSource<Booking>()
+  
   constructor(private bookingService: BookingService, public authService: AuthService, private router: Router) {}
-
+  
   ngOnInit(): void{
-    this.loadBookings()
+    this.dataSource.paginator = this.paginator;
+    this.loadBookings();
   }
 
   loadBookings():void{
@@ -32,6 +39,7 @@ export class BookingListComponent implements OnInit {
       next: (bookings : Booking[]) => {
         if(this.authService.isAdmin()){
           this.bookings = bookings
+          this.dataSource.data = this.bookings
         } else {
           const currentUser = this.authService.getCurrentUser().id;
           this.bookings = bookings.filter(booking => booking.user_id === currentUser)
