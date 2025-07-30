@@ -1,66 +1,68 @@
 <div class="booking-list-container p-6">
     <h2 class="text-2xl font-bold mb-4 px-14">Booking List</h2>
     <div *ngIf="isLoading" class="text-center">Loading bookings...</div>
-     <div *ngIf="!isLoading && bookings.length === 0" class="text-center">
-        No bookings found.
-    </div>
-    <div *ngIf="!isLoading && bookings.length > 0 && authService.isCustomer()" class="pt-8">
-        <div class="px-20 grid grid-cols-1 lg:grid-cols-2 gap-4">
-            <div *ngFor="let booking of bookings" class="border border-gray-200 rounded-lg p-4">
-                <div class="booking-details">
-                    <h3 class="text-xl font-semibold">{{ booking.vehicle_name }} (Booking ID: {{ booking.id }})</h3>
-                    <p><strong>Vehicle ID:</strong> {{ booking.vehicle_id }}</p>
-                    <!-- <p *ngIf="authService.isAdmin()"><strong>User ID:</strong> {{ booking.user_id }}</p>
-                    <p *ngIf="authService.isAdmin()" class=""><strong>User Name:</strong> {{ booking.user_name || 'N/A' }}</p> -->
-                    <p><strong>Start Date:</strong> {{ booking.start_date | date:'mediumDate' }}</p>
-                    <p><strong>End Date:</strong> {{ booking.end_date | date:'mediumDate' }}</p>
-                    <p><strong>Status:</strong> {{ booking.status }}</p>
-                    <p *ngIf="booking.total_amount" class="font-semibold"><strong>Total Amount:</strong> Rs. {{ booking.total_amount }}</p>
-                </div>
-                <div class="buttons flex space-x-4 justify-center pt-3" *ngIf="!authService.isAdmin()">
-                    <button 
-                        class="border border-gray-200 text-white px-6 rounded py-2 h-10"
-                        (click)="openEditBookingModal(booking)"
-                    >
-                        Edit
-                    </button>
-                    <button class="border border-red-400 px-6 py-2 hover:bg-red-500 h-10 rounded" (click)="deleteBooking(booking.id!)">
-                        Delete
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="mat-elevation-z8 mx-24 overflow-y-auto h-[270px] bg-gray-400 rounded-lg mt-12" *ngIf="!isLoading && bookings.length > 0 && authService.isAdmin()">
-        <table mat-table [dataSource]="dataSource">
-            <ng-container matColumnDef="user_name">
-                <th mat-header-cell *matHeaderCellDef> User Name </th>
-                <td mat-cell *matCellDef="let element"> {{element.user_name}} </td>
+    <div class="mx-24 bg-gray-400 rounded-lg mt-12 overflow-x-auto overflow-y-auto" *ngIf="!isLoading && bookings.length > 0">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            
+            <ng-container matColumnDef="user_name" *ngIf="authService.isAdmin()">
+            <th mat-header-cell *matHeaderCellDef>User Name</th>
+            <td mat-cell *matCellDef="let element">{{element.user_name}}</td>
             </ng-container>
 
-            <ng-container matColumnDef="vehicle_id">
-                <th mat-header-cell *matHeaderCellDef> Vehicle ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.vehicle_id}} </td>
+            <ng-container matColumnDef="vehicle_id" *ngIf="authService.isAdmin()">
+            <th mat-header-cell *matHeaderCellDef>Vehicle ID</th>
+            <td mat-cell *matCellDef="let element">{{element.vehicle_id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="booking_id" *ngIf="authService.isCustomer()">
+            <th mat-header-cell *matHeaderCellDef>Booking ID</th>
+            <td mat-cell *matCellDef="let element">{{element.id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="vehicle_name" *ngIf="authService.isCustomer()">
+            <th mat-header-cell *matHeaderCellDef>Vehicle Name</th>
+            <td mat-cell *matCellDef="let element">{{element.vehicle_name}}</td>
             </ng-container>
 
             <ng-container matColumnDef="start_date">
-                <th mat-header-cell *matHeaderCellDef> Start Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.start_date | date:'mediumDate' }} </td>
+            <th mat-header-cell *matHeaderCellDef>Start Date</th>
+            <td mat-cell *matCellDef="let element">{{element.start_date | date:'mediumDate'}}</td>
             </ng-container>
 
             <ng-container matColumnDef="end_date">
-                <th mat-header-cell *matHeaderCellDef> End Date </th>
-                <td mat-cell *matCellDef="let element"> {{element.end_date | date: 'mediumDate' }} </td>
+            <th mat-header-cell *matHeaderCellDef>End Date</th>
+            <td mat-cell *matCellDef="let element">{{element.end_date | date:'mediumDate'}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="action" *ngIf="authService.isCustomer()">
+                <th mat-header-cell *matHeaderCellDef>Action</th>
+                <td mat-cell *matCellDef="let element">
+                    <div class="buttons flex space-x-4 justify-items-center" *ngIf="authService.isCustomer()">
+                        <button
+                            class="p-1 border border-gray-500 rounded-lg hover:bg-blue-500 hover:text-white"
+                            (click)="openEditBookingModal(element)"
+                        >
+                            <img width="25" height="25" src="https://img.icons8.com/carbon-copy/100/create-new.png" alt="create-new"/>
+                        </button>
+                        <button
+                            class="p-1 border border-gray-500 rounded-lg hover:bg-red-500 hover:text-white"
+                            (click)="element.id ? deleteBooking(element.id) : null"
+                        >
+                            <img width="20" height="20" src="https://img.icons8.com/ios/50/delete-trash.png" alt="delete-trash"/>
+                        </button>
+                    </div>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="openBookingDetails(row)" style="cursor:pointer"></tr>
         </table>
-        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
-                 showFirstLastButtons
-                 aria-label="Select page of periodic elements">
-        </mat-paginator>
     </div>
+
+    <div *ngIf="!isLoading && bookings.length === 0" class="mx-24 text-center py-4">
+        No bookings found.
+    </div>
+
     <app-edit-booking-modal
         *ngIf="bookingModalOpened && selectedBooking && selectedVehicle"
         [booking]="selectedBooking"

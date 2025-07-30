@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{data.itemType}} Details</h2>
+<mat-dialog-content>
+    <div class="details-container p-2" *ngIf="data.item">
+        <div *ngFor="let key of getObjectKeys(data.item)">
+            <p class="m-1"><strong>{{key | titlecase}}:</strong>{{ data.item[key] }}</p>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onClose()" class="button">
+        Close
+    </button>
+</mat-dialog-actions>
+

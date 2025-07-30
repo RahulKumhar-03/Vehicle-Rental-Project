@@ -1,0 +1,24 @@
+.details-container {
+  padding: 10px;
+}
+
+.details-container p {
+  margin: 8px 0;
+}
+.custom-dialog .mat-dialog-container {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    background: white; 
+    padding: 0;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.custom-dialog .mat-dialog-container:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+.button{
+  justify-content: center;
+  padding: 2;
+  background-color: lightslategray;
+  color: white;
+}
