@@ -39,16 +39,6 @@ async def create_maintenance(maintenance: MaintenanceCreate, currentUser: User =
     
     result = await maintenance_collection.insert_one(maintenance_dict)
 
-    await vehicle_collection.update_one(
-        {"_id": ObjectId(maintenance.vehicle_id)},
-        {"$set": {"last_maintenance": vehicle["next_maintenance"]}} 
-    )
-
-    await vehicle_collection.update_one(
-        {"_id": ObjectId(maintenance.vehicle_id)},
-        {"$set": {"next_maintenance":maintenance.maintenance_date}}
-    )
-
     maintenance_dict["id"] = str(result.inserted_id)
     return Maintenance(**maintenance_dict)
 
@@ -69,11 +59,6 @@ async def update_maintenance(maintenance_id: str, maintenance:MaintenanceCreate,
 
     if result.matched_count == 0:
         raise HTTPException(status_code=404, detail="No Records found")
-    
-    await vehicle_collection.update_one(
-        {"_id": ObjectId(maintenance.vehicle_id)},
-        {"$set": {"next_maintenance" : maintenance.maintenance_date}}
-    )
 
     maintenance_dict = await maintenance_collection.find_one({"_id": ObjectId(maintenance_id)})
     maintenance_dict["id"] = str(maintenance_dict["_id"])

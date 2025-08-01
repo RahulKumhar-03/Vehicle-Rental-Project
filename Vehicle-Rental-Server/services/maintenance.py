@@ -46,7 +46,7 @@ async def maintenance_check_alerts():
 
         if vehicle and vehicle["status"] == "maintenance":
 
-            update_data = {"status": "available", "last_maintenance": maintenance["maintenance_date"]}
+            update_data = {"status": "available"}
 
             await vehicle_collection.update_one(
                 {"_id": ObjectId(maintenance["vehicle_id"])},

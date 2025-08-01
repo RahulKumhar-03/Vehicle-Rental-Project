@@ -6,6 +6,7 @@ import { MaintenanceFormComponent } from '../maintenance-form/maintenance-form.c
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DetailModalComponent } from 'src/app/shared/components/detail-modal/detail-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-maintenance-list',
@@ -15,6 +16,7 @@ import { DetailModalComponent } from 'src/app/shared/components/detail-modal/det
   styleUrls: ['./maintenance-list.component.css']
 })
 export class MaintenanceListComponent implements OnInit {
+
   maintenances: Maintenance[] = []
   isLoading: boolean = false
   maintenanceModalOpened: boolean = false
@@ -25,6 +27,7 @@ export class MaintenanceListComponent implements OnInit {
   constructor(
     private maintenanceService: MaintenanceService,
     public dialog: MatDialog,
+    private router: Router
    ){}
 
   ngOnInit(): void {
@@ -51,27 +54,35 @@ export class MaintenanceListComponent implements OnInit {
     this.maintenanceModalOpened = true
   }
 
-  closeMaintenanceModal(refresh: boolean){
+  closeMaintenanceModal(maintenanceData: any){
     this.maintenanceModalOpened = false
-    this.selectedMaintenance = null
-    if(refresh){
-      this.loadMaintenances();
+    if(maintenanceData){
+      if(this.selectedMaintenance){
+        this.maintenanceService.updateMaintenance(this.selectedMaintenance.id!, maintenanceData).subscribe({
+          next: () => {
+            this.loadMaintenances();
+          },
+          error: (err) => console.error("Error while updating record",err)
+        })
+      }
     }
+    this.selectedMaintenance = null
   }
 
   deleteMaintenance(maintenanceId: string):void{
+    if(confirm('Are you sure to delete the maintenance record?')){
       this.maintenanceService.deleteMaintenance(maintenanceId).subscribe({
         next: () => this.loadMaintenances(),
         error: (err) => console.error('Error while deleting maintenance!',err)
       })
+    }
   }
 
   openMaintenanceDetails(maintenance: Maintenance){
     this.dialog.open(DetailModalComponent, {
       width: '350px',
       data: {item: maintenance, itemType: 'Maintenance'},
-      position:{ top:'-450px', left:'400px' },
-      panelClass:'custom-dialog'
+      position:{ top:'-440px', left:'400px' },
     })
   }
 }

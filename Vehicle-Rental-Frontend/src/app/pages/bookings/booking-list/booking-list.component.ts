@@ -93,7 +93,7 @@ export class BookingListComponent implements OnInit {
     this.bookingModalOpened = true
   }
 
-  closeBookingModal(bookingData: any) {
+  closeEditBookingModal(bookingData: any) {
     this.bookingModalOpened = false;
     
     if (bookingData) {
@@ -115,7 +115,7 @@ export class BookingListComponent implements OnInit {
     this.dialog.open(DetailModalComponent, {
       width: '400px',
       data: {item: booking, itemType: 'Booking'},
-      position:{ top:'-500px', left:'400px' },
+      position:{ top:'-540px', left:'400px' },
       panelClass:'custom-dialog'
     })
   }

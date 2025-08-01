@@ -11,8 +11,6 @@ export interface Vehicle{
     id: string
     model: string
     type: string
-    next_maintenance?: string
-    last_maintenance?: string
     rental_rate: number
     license_plate_no: string
     location: string
@@ -40,7 +38,5 @@ export interface Maintenance{
     maintenance_date: string
     vehicle_id: string
     vehicle_name: string
-    description: string
     status: string
-    cost?: number
 }

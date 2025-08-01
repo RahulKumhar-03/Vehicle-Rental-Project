@@ -40,7 +40,8 @@ export class BookingFormComponent {
       this.close.emit(bookingData)
     }
   }
-   closeModal(): void{
+
+  closeModal():void{
     this.close.emit(null)
-   }
+  }
 }

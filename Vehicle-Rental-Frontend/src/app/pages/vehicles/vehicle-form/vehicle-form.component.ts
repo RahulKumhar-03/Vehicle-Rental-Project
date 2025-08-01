@@ -4,6 +4,7 @@ import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 import { Vehicle } from 'src/Schemas/interfaces';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { CreateMaintenanceModalComponent } from '../../maintenance/create-maintenance-modal/create-maintenance-modal.component';
 
 @Component({
   selector: 'app-vehicle-form',
@@ -31,7 +32,6 @@ export class VehicleFormComponent {
       description: [''],
       range: ['', Validators.required],
       location:['', [Validators.required, Validators.maxLength(100)]],
-      next_maintenance:['']
     })
   }
   ngOnInit(): void{

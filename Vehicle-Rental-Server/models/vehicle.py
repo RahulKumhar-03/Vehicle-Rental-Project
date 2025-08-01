@@ -26,8 +26,8 @@ class VehicleCreate(VehicleBase):
 class Vehicle(VehicleBase):
     id: Optional[str] = None
     status: str = "Available"
-    last_maintenance: Optional[datetime] = None
-    next_maintenance: Optional[datetime] = None
+    #last_maintenance: Optional[datetime] = None
+    #next_maintenance: Optional[datetime] = None
 
     class Config:
         json_encoders = { datetime: lambda v: v.isoformat() }

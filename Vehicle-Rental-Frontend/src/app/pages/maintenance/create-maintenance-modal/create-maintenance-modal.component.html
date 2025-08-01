@@ -15,11 +15,9 @@
           <label for="vehicle_id" class="block text-gray-700 text-sm font-bold mb-2">Vehicle ID</label>
           <input
             type="text"
-            id="vehicle_id"
-            placeholder="Eg. 687490269ceacae7e8c55fd4"
-            formControlName="vehicle_id"
+            disabled
             class="w-full p-2 border border-gray-300 rounded"
-            required
+            [value]="vehicle.id"
           />
           <p class="py-1 text-xs text-gray-600">Input Disabled</p>
         </div>
@@ -27,12 +25,9 @@
           <label for="vehicle_name" class="block text-gray-700 text-sm font-bold mb-2">Vehicle Model</label>
           <input
             type="text"
-            id="vehicle_name"
-            formControlName="vehicle_name"
             class="w-full p-2 border border-gray-300 rounded"
-            placeholder="Eg. BMW M4 CS"
-            required
-            
+            [value]="vehicle.model"
+            disabled
           />
           <p class="py-1 text-xs text-gray-600">Input Disabled</p>
         </div>
@@ -58,7 +53,7 @@
           [disabled]="maintenanceForm.invalid"
           class="bg-blue-600 rounded hover:bg-blue-700 transition text-white px-4 py-2"
         >
-        Update
+            Add
         </button>
         <button
           type="button"

@@ -5,7 +5,6 @@ from typing import Optional
 class MaintenanceBase(BaseModel):
     vehicle_id: str
     vehicle_name: str
-    description: str
     maintenance_date: datetime
 
 class MaintenanceCreate(MaintenanceBase):
@@ -14,7 +13,6 @@ class MaintenanceCreate(MaintenanceBase):
 class Maintenance(MaintenanceBase):
     id: Optional[str] = None
     status: str = "scheduled"
-    cost: Optional[float] = None
 
     class config:
         json_encoders = {datetime: lambda v: v.isoformat()}
