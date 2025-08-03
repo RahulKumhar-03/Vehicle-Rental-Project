@@ -12,7 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, EditBookingModalComponent,MatTableModule, DetailModalComponent, MatDialogModule],
+  imports: [CommonModule, EditBookingModalComponent, MatTableModule, MatDialogModule],
   templateUrl: './booking-list.component.html',
   styleUrls: ['./booking-list.component.css']
 })
@@ -54,7 +54,7 @@ export class BookingListComponent implements OnInit {
         if(this.authService.isAdmin()){
           this.bookings = bookings
         } else {
-          const currentUser = this.authService.getCurrentUser().id;
+          const currentUser = this.authService.getCurrentUser().id!;
           this.bookings = bookings.filter(booking => booking.user_id === currentUser)
         }
         console.log('Filter Bookings: ',this.bookings)
@@ -115,8 +115,6 @@ export class BookingListComponent implements OnInit {
     this.dialog.open(DetailModalComponent, {
       width: '400px',
       data: {item: booking, itemType: 'Booking'},
-      position:{ top:'-540px', left:'400px' },
-      panelClass:'custom-dialog'
     })
   }
 }

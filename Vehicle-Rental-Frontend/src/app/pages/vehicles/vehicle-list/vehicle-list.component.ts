@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Maintenance, Vehicle } from 'src/Schemas/interfaces';
+import { Vehicle } from 'src/Schemas/interfaces';
 import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
@@ -10,11 +10,16 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CreateMaintenanceModalComponent } from '../../maintenance/create-maintenance-modal/create-maintenance-modal.component';
 import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
 import { Router } from '@angular/router';
+import {MatSelectModule} from '@angular/material/select'
+import {MatInputModule} from '@angular/material/input'
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
-  imports: [CommonModule, VehicleFormComponent, BookingFormComponent, MatTableModule, CreateMaintenanceModalComponent],
+  imports: [CommonModule, VehicleFormComponent, BookingFormComponent, MatTableModule, CreateMaintenanceModalComponent, MatSelectModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, FormsModule],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css']
 })
@@ -23,11 +28,27 @@ export class VehicleListComponent implements OnInit {
   bookingModalOpened: boolean = false
   vehicleModalOpened: boolean = false
   maintenanceModalOpened: boolean = false
+
   selectedVehicle: Vehicle | null = null
+
   vehicles: Vehicle[] = []
+
   currentDate: string = new Date().toISOString()
+
   displayedColumns: string[] = ['vehicle_name','license_plate', 'rental_rate','range', 'location', 'type', 'action'];
   dataSource = new MatTableDataSource<Vehicle>();
+
+  startDate: Date | null = null
+  endDate: Date | null = null
+
+  carTypes: CarType[] = [
+    {value: 'Sports-0', viewValue: 'Sports'},
+    {value: 'Sedan-1', viewValue: 'Sedan'},
+    {value: 'Hatchback-2', viewValue: 'Hatchback'},
+    {value: 'SUV-3', viewValue: 'SUV'},
+    {value: 'Off-roader-4', viewValue: 'Off-Roader'},
+    {value: 'Convertible-5', viewValue: 'Convertible'},
+  ]
 
   constructor( 
     public vehicleService: VehicleService,
@@ -124,4 +145,9 @@ export class VehicleListComponent implements OnInit {
       this.maintenanceModalOpened = false
     }
   }
+}
+
+export interface CarType{
+  value: string;
+  viewValue:string;
 }

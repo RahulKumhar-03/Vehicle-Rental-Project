@@ -69,7 +69,7 @@ export class EditBookingModalComponent {
       const bookingData = {
         vehicle_id: this.vehicle.id!,
         vehicle_name: this.vehicle.model,
-        user_id: this.authService.getCurrentUser().id!,
+        user_id: this.authService.getCurrentUser().id,
         user_name: this.authService.getCurrentUser().name,
         start_date: startDate.toISOString(),
         end_date: endDate.toISOString(),

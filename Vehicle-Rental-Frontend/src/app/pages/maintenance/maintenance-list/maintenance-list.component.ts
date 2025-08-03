@@ -82,7 +82,6 @@ export class MaintenanceListComponent implements OnInit {
     this.dialog.open(DetailModalComponent, {
       width: '350px',
       data: {item: maintenance, itemType: 'Maintenance'},
-      position:{ top:'-440px', left:'400px' },
     })
   }
 }

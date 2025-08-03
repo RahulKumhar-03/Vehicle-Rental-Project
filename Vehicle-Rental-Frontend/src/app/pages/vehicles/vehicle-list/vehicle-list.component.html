@@ -1,128 +1,210 @@
 <div class="container mx-24 py-4">
-    <div class="mb-2" *ngIf="authService.isAdmin()">
-        <button (click)="openVehicleModal()" class="border border-gray-600 hover:bg-white hover:text-black py-2 px-3 rounded-lg">
-            Add Vehicle
-        </button>
-    </div>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" *ngIf="authService.isCustomer()">
-        <div class="rounded-lg border border-gray-600 p-4" *ngFor="let vehicle of vehicles">
-            <h3 class="text-xl font-semibold px-4 pt-1 pb-2">{{vehicle.model}}</h3>
-            <div class="flex justify-evenly space-x-1">
-                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.type}}</p>
-                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.gearType}}</p>
-                <p class="border rounded-full border-gray-100 text-sm px-3 py-1">{{vehicle.location}}</p>
-            </div>
-            <img [src]="vehicle.imageUrl" alt="Car image" class="w-full h-52 object-cover pt-2">
-            <p class="text-xs px-3 pt-2" *ngIf="vehicle.description">{{vehicle.description}}</p>
-            <div class="flex">
-                <p class="text-2xl font-bold pl-4">{{vehicle.rental_rate}}</p><span class="text-lg text-gray-300 pt-1">.00 Rs/DAY</span>
-            </div>
-            <div class="flex">
-                <p class="text-2xl font-bold pl-4 pr-1">{{vehicle.range}}</p><span class="text-lg text-gray-300 pt-1">KM PER RENTAL</span>
-            </div>
-            
-            <div class="flex justify-evenly">
-                <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
-                    (click)="openBookingModal(vehicle)" *ngIf="authService.isCustomer()"
+  <div class="mb-2" *ngIf="authService.isAdmin()">
+    <button
+      (click)="openVehicleModal()"
+      class="border border-gray-600 hover:bg-white hover:text-black py-2 px-3 rounded-lg"
+    >
+      Add Vehicle
+    </button>
+  </div>
+
+  <div class="justify-items-center">
+        <div class="space-x-3">
+            <mat-form-field>
+                <mat-label>Start date</mat-label>
+                <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" [min]="currentDate" />
+                <mat-datepicker-toggle
+                matIconSuffix
+                [for]="startPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #startPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>End date</mat-label>
+                <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" [min]="currentDate" />
+                <mat-datepicker-toggle
+                matIconSuffix
+                [for]="endPicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #endPicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field>
+                <mat-label>Car Type</mat-label>
+                <mat-select>
+                <mat-option
+                    *ngFor="let carType of carTypes"
+                    [value]="carType.value"
+                    >{{ carType.viewValue }}</mat-option
                 >
-                    Book Now
-                </button>
-                <div *ngIf="authService.isAdmin()" class="space-x-4 ">
-                    <button class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
-                        (click)="openVehicleModal(vehicle)"
-                    >
-                    Edit
-                    </button>
-                    <button (click)="deleteVehicle(vehicle.id)"
-                        class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
-                    >
-                    Delete
-                    </button>
-                </div>
-            </div>
+                </mat-select>
+            </mat-form-field> 
         </div>
     </div>
+    <div
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" *ngIf="!authService.isAdmin()"
+    >
+      <div
+        class="rounded-lg border-8 border-gray-600 p-2"
+        *ngFor="let vehicle of vehicles"
+      >
+        <h3 class="text-xl font-semibold px-4 pt-1 pb-2">
+          {{ vehicle.model }}
+        </h3>
+        <div class="flex justify-evenly space-x-1">
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.type }}
+          </p>
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.gearType }}
+          </p>
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.location }}
+          </p>
+        </div>
+        <img
+          [src]="vehicle.imageUrl"
+          alt="Car image"
+          class="w-full h-52 object-cover pt-2"
+        />
+        <p class="text-xs px-3 pt-2" *ngIf="vehicle.description">
+          {{ vehicle.description }}
+        </p>
+        <div class="flex">
+          <p class="text-2xl font-bold pl-4">{{ vehicle.rental_rate }}</p>
+          <span class="text-lg text-gray-300 pt-1">.00 Rs/DAY</span>
+        </div>
+        <div class="flex">
+          <p class="text-2xl font-bold pl-4 pr-1">{{ vehicle.range }}</p>
+          <span class="text-lg text-gray-300 pt-1">KM PER RENTAL</span>
+        </div>
 
-    <div class="mx-10 bg-gray-400 rounded-lg mt-12 overflow-x-auto overflow-y-auto" *ngIf="vehicles.length > 0 && authService.isAdmin()">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-            
-            <ng-container matColumnDef="vehicle_name">
-            <th mat-header-cell *matHeaderCellDef>Model</th>
-            <td mat-cell *matCellDef="let element">{{element.model}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="license_plate">
-            <th mat-header-cell *matHeaderCellDef>License No.</th>
-            <td mat-cell *matCellDef="let element">{{element.license_plate_no}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="rental_rate">
-            <th mat-header-cell *matHeaderCellDef>Rental Rate</th>
-            <td mat-cell *matCellDef="let element">{{element.rental_rate}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="range">
-            <th mat-header-cell *matHeaderCellDef>Range</th>
-            <td mat-cell *matCellDef="let element">{{element.range}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="location">
-            <th mat-header-cell *matHeaderCellDef>Location</th>
-            <td mat-cell *matCellDef="let element">{{element.location}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="type">
-            <th mat-header-cell *matHeaderCellDef>Type</th>
-            <td mat-cell *matCellDef="let element">{{element.type}}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef>Action</th>
-                <td mat-cell *matCellDef="let element">
-                    <div class="buttons flex space-x-4 justify-items-center">
-                        <button
-                            class="p-1 border border-gray-500 rounded-lg hover:bg-blue-500 hover:text-white"
-                            (click)="openVehicleModal(element)"
-                        >
-                            <img width="25" height="25" src="https://img.icons8.com/carbon-copy/100/create-new.png" alt="create-new"/>
-                        </button>
-                        <button
-                            class="p-2 border border-gray-500 rounded-lg hover:bg-red-500 hover:text-white"
-                            (click)="element.id ? deleteVehicle(element.id) : null"
-                        >
-                            <img width="20" height="20" src="https://img.icons8.com/ios/50/delete-trash.png" alt="delete-trash"/>
-                        </button>
-                        <button
-                            class="p-2 border border-gray-500 rounded-lg hover:bg-gray-200 hover:text-white"
-                            (click)="openCreateMaintenanceModal(element)"
-                        >
-                            <img width="20" height="20" src="https://img.icons8.com/ios/50/service.png" alt="service"/>
-                        </button>
-                    </div>
-                </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
+        <div class="flex justify-evenly">
+          <button
+            class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+            (click)="openBookingModal(vehicle)"
+            *ngIf="authService.isCustomer()"
+          >
+            Book Now
+          </button>
+          <div *ngIf="authService.isAdmin()" class="space-x-4">
+            <button
+              class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
+              (click)="openVehicleModal(vehicle)"
+            >
+              Edit
+            </button>
+            <button
+              (click)="deleteVehicle(vehicle.id)"
+              class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <app-booking-form 
-            *ngIf="bookingModalOpened && selectedVehicle" 
-            [vehicle]="selectedVehicle!" 
-            (close)="closeBookingModal($event)"
+    <div
+      class="mx-10 bg-gray-400 rounded-lg mt-12 overflow-x-auto overflow-y-auto"
+      *ngIf="vehicles.length > 0 && authService.isAdmin()"
+    >
+      <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+        <ng-container matColumnDef="vehicle_name">
+          <th mat-header-cell *matHeaderCellDef>Model</th>
+          <td mat-cell *matCellDef="let element">{{ element.model }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="license_plate">
+          <th mat-header-cell *matHeaderCellDef>License No.</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.license_plate_no }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="rental_rate">
+          <th mat-header-cell *matHeaderCellDef>Rental Rate</th>
+          <td mat-cell *matCellDef="let element">{{ element.rental_rate }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="range">
+          <th mat-header-cell *matHeaderCellDef>Range</th>
+          <td mat-cell *matCellDef="let element">{{ element.range }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="location">
+          <th mat-header-cell *matHeaderCellDef>Location</th>
+          <td mat-cell *matCellDef="let element">{{ element.location }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Type</th>
+          <td mat-cell *matCellDef="let element">{{ element.type }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="action">
+          <th mat-header-cell *matHeaderCellDef>Action</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="buttons flex space-x-4 justify-items-center">
+              <button
+                class="p-1 border border-gray-500 rounded-lg hover:bg-blue-500 hover:text-white"
+                (click)="openVehicleModal(element)"
+              >
+                <img
+                  width="25"
+                  height="25"
+                  src="https://img.icons8.com/carbon-copy/100/create-new.png"
+                  alt="create-new"
+                />
+              </button>
+              <button
+                class="p-2 border border-gray-500 rounded-lg hover:bg-red-500 hover:text-white"
+                (click)="element.id ? deleteVehicle(element.id) : null"
+              >
+                <img
+                  width="20"
+                  height="20"
+                  src="https://img.icons8.com/ios/50/delete-trash.png"
+                  alt="delete-trash"
+                />
+              </button>
+              <button
+                class="p-2 border border-gray-500 rounded-lg hover:bg-gray-200 hover:text-white"
+                (click)="openCreateMaintenanceModal(element)"
+              >
+                <img
+                  width="20"
+                  height="20"
+                  src="https://img.icons8.com/ios/50/service.png"
+                  alt="service"
+                />
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <app-booking-form
+      *ngIf="bookingModalOpened && selectedVehicle"
+      [vehicle]="selectedVehicle!"
+      (close)="closeBookingModal($event)"
     ></app-booking-form>
 
     <app-vehicle-form
-        *ngIf="vehicleModalOpened"
-        [vehicle]="selectedVehicle!"
-        (close)="closeVehicleModal($event)"
+      *ngIf="vehicleModalOpened"
+      [vehicle]="selectedVehicle!"
+      (close)="closeVehicleModal($event)"
     ></app-vehicle-form>
 
     <app-create-maintenance-modal
-        *ngIf="maintenanceModalOpened"
-        [vehicle]="selectedVehicle!"
-        (close)="closeCreateMaintenanceModal($event)"
+      *ngIf="maintenanceModalOpened"
+      [vehicle]="selectedVehicle!"
+      (close)="closeCreateMaintenanceModal($event)"
     >
     </app-create-maintenance-modal>
 </div>

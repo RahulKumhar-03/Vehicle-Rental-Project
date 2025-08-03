@@ -27,12 +27,7 @@ export class LoginRegisterComponent {
     name: [''],
     address: [''],
     email: ['', [Validators.required, Validators.email]],
-    password: [
-      '',
-      [ 
-        Validators.required
-      ]
-    ]
+    password: ['', Validators.required]
   })
 
   onSubmit(){

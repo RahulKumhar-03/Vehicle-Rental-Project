@@ -12,7 +12,7 @@
             <a routerLink="/maintenance-list" class="text-lg" *ngIf="authService.isAdmin()">Maintenance</a>
         </div>
         <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-            <button *ngIf="!isLoggedIn" class="relative py-1 rounded px-6 hover:bg-white hover:text-black py-1" (click)="modalOpened = true">
+            <button *ngIf="!isLoggedIn" class="relative py-1 rounded px-6 hover:bg-white hover:text-black text-lg" (click)="modalOpened = true">
                 Login
             </button>
             <button *ngIf="isLoggedIn" class="relative text-lg rounded px-6 hover:bg-white hover:text-black py-1" (click)="logout()">

@@ -16,13 +16,15 @@ export class AuthService {
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated()); 
   loggedInStatus = this.loggedIn.asObservable();
 
+  private currentUserCache: User | null = null;
+
   constructor(public http: HttpClient,  public router: Router) { }
 
   login(email: string, password: string): Observable<{ access_token: string; user: User }> {
     return this.http.post<{access_token: string; user: User}>(`${this.apiUrl}/login`, {email, password}).pipe(
       tap((response) => {
         localStorage.setItem(this.tokenKey,response.access_token)
-        this.setCurrentUser(response.user)
+        this.currentUserCache = response.user;
         this.loggedIn.next(true);
       })
     )
@@ -30,28 +32,46 @@ export class AuthService {
 
   autoLogin(user: User, token: string): void{
     localStorage.setItem(this.tokenKey, token);
-    this.setCurrentUser(user);
+    this.currentUserCache = user;
     this.loggedIn.next(true);
     this.router.navigate(['/home'])
   }
 
   logout(): void{
     localStorage.removeItem(this.tokenKey)
-    localStorage.removeItem(this.user)
+    this.currentUserCache = null;
     this.loggedIn.next(false);
     this.router.navigate(["/home"])
   }
 
-  setCurrentUser(user: User): void{
-    localStorage.setItem(this.user, JSON.stringify(user));
-  }
+  // setCurrentUser(user: User): void{
+  //   localStorage.setItem(this.user, JSON.stringify(user));
+  // }
 
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
   getCurrentUser(): User{
-    return JSON.parse(localStorage.getItem(this.user) || '{}');
+    // return JSON.parse(localStorage.getItem(this.user) || '{}');
+    if (this.currentUserCache) {
+      return this.currentUserCache;
+    }
+    
+    // If cache is empty but token exists, decode user from token
+    const token = this.getToken();
+    if (token) {
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        // You'll need to store user info in JWT payload during login
+        return payload.user || {} as User;
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return {} as User;
+      }
+    }
+    
+    return {} as User;
   }
 
   isAuthenticated(): boolean{

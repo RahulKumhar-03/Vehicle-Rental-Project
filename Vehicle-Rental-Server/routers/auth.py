@@ -26,10 +26,14 @@ def hashing_pwd(password: str) -> str:
 def check_password(plain_password: str, hashed_password: str) -> bool:
     return bcrypt.checkpw(plain_password.encode(),hashed_password.encode())
 
-def create_jwt_token(data: dict):
+def create_jwt_token(data: dict, user_data: dict = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + timedelta(hours=2)
     to_encode.update({"exp":expire})
+
+    if user_data:
+        to_encode.update({"user": user_data})
+
     return jwt.encode(to_encode, settings.jwt_secret_key, algorithm=settings.algorithm)
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
@@ -110,9 +114,6 @@ async def loginUser(credentials: LoginCredentials):
         )
         raise HTTPException(status_code=401, detail="Invalid email or password. Please Register!!")
 
-    
-    token = create_jwt_token(data={"sub": str(user["_id"])})
-
     user_dict = {
         "id": str(user["_id"]),
         "name": user["name"],
@@ -120,8 +121,12 @@ async def loginUser(credentials: LoginCredentials):
         "role": user.get("role","user"),
         "address": user["address"]
     }
+    token = create_jwt_token(data={"sub": str(user["_id"])},
+                             user_data=user_dict)
+
+    
     return {"access_token": token, "token_type": "bearer", "user": user_dict}
 
-@router.get('/profile', response_model=User)
-async def get_profile(current_user: User = Depends(get_current_user)):
-    return current_user
+# @router.get('/profile', response_model=User)
+# async def get_profile(current_user: User = Depends(get_current_user)):
+#     return current_user

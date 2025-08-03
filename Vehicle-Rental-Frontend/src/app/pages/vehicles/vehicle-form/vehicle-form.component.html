@@ -11,7 +11,7 @@
     </div>
     <form [formGroup]="vehicleForm" (ngSubmit)="onSubmit()" class="space-y-4 text-black">
       <div class="flex space-x-4">
-        <div>
+        <div class="w-1/2">
           <label for="model" class="block text-gray-700 text-sm font-bold mb-2">Model</label>
           <input
             type="text"
@@ -24,7 +24,7 @@
           />
           <p class="py-1 text-xs text-gray-600">{{ isEditMode ? 'Input Disabled' : "Name should be same as in database"}}</p>
         </div>
-        <div>
+        <div class="w-1/2">
           <label for="license_plate_no" class="block text-gray-700 text-sm font-bold mb-2">License Plate No.</label>
           <input
             type="text"
@@ -39,7 +39,7 @@
         </div>
       </div>
       <div class="flex space-x-4">
-        <div>
+        <div class="w-1/2">
           <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Type</label>
           <input
             type="text"
@@ -52,7 +52,7 @@
           />
           <p class="py-1 text-xs text-gray-600">{{ isEditMode ? 'Input Disabled' : "Eg. Coupe, Sports, Sedan, etc" }}</p>
         </div>
-        <div>
+        <div class="w-1/2">
           <label for="location" class="block text-gray-700 text-sm font-bold mb-2">Location</label>
           <input
             type="text"
@@ -92,7 +92,7 @@
         </div>
       </div>
       <div class="flex space-x-4">
-        <div>
+        <div class="w-1/2">
           <label for="image_url" class="block text-gray-700 text-sm font-bold mb-2">Image URL (Optional)</label>
           <input
             type="text"
@@ -102,7 +102,7 @@
             placeholder="Enter image URL"
           />
         </div>
-        <div>
+        <div class="w-1/2">
           <label for="range" class="block text-gray-700 text-sm font-bold mb-2">Range</label>
           <input
             type="text"
@@ -115,7 +115,7 @@
         </div>
       </div>
       <div class="flex space-x-4">
-        <div>
+        <div class="w-1/2">
           <label for="gear_type" class="block text-gray-700 text-sm font-bold mb-2">Gear Type</label>
           <input
             type="text"
