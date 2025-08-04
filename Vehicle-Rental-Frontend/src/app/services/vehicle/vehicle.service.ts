@@ -37,7 +37,7 @@ export class VehicleService {
     license_plate_no: string,
     location: string,
     description?: string,
-    status: string,
+    //status: string,
     imageUrl?: string,
     range?: number }): Observable<Vehicle> {
       const token = this.getToken();

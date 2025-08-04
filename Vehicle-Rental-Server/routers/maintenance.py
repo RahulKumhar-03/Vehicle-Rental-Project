@@ -19,23 +19,23 @@ async def create_maintenance(maintenance: MaintenanceCreate, currentUser: User =
     if not vehicle: 
         raise HTTPException(status_code=400, detail="Vehicle Not Found")
     
-    current_date = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
+    # current_date = datetime.utcnow().replace(hour=0, minute=0, second=0, microsecond=0)
 
-    maintenance_threshold = maintenance.maintenance_date - timedelta(days=2)
+    # maintenance_threshold = maintenance.maintenance_date - timedelta(days=2)
     
-    if maintenance_threshold.date() == current_date.date():
-        if vehicle["status"] != "rented":
-            await vehicle_collection.update_one(
-                {"_id": ObjectId(maintenance.vehicle_id)},
-                {"$set": {"status": "maintenance"}}
-            )
-        else:
-            notification.notify(
-                title='Maintenance Alert',
-                message=f"{vehicle['model']} currently rented for date {maintenance.maintenance_date}",
-                app_name="main",
-                timeout=5
-            )
+    # if maintenance_threshold.date() == current_date.date():
+    #     if vehicle["status"] != "rented":
+    #         await vehicle_collection.update_one(
+    #             {"_id": ObjectId(maintenance.vehicle_id)},
+    #             {"$set": {"status": "maintenance"}}
+    #         )
+    #     else:
+    #         notification.notify(
+    #             title='Maintenance Alert',
+    #             message=f"{vehicle['model']} currently rented for date {maintenance.maintenance_date}",
+    #             app_name="main",
+    #             timeout=5
+    #         )
     
     result = await maintenance_collection.insert_one(maintenance_dict)
 

@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Maintenance, Vehicle } from 'src/Schemas/interfaces';
 import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
-import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-maintenance-form',
@@ -18,7 +17,7 @@ export class MaintenanceFormComponent {
 
   maintenanceForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private maintenanceService: MaintenanceService){
+  constructor(private fb: FormBuilder){
     this.maintenanceForm = this.fb.group({
       vehicle_id: ['', Validators.required],
       vehicle_name: ['', Validators.required],
@@ -38,27 +37,12 @@ export class MaintenanceFormComponent {
 
   onSubmit(){
     if(this.maintenanceForm.valid){
-      /* const maintenanceData = {
+      const updatedData = {
         vehicle_id: this.maintenance?.vehicle_id,
         vehicle_name: this.maintenance?.vehicle_name,
-        description: this.maintenanceForm.value.description,
-        maintenance_date: this.maintenanceForm.value.maintenance_date
-      } */
-        const updatedData = {
-          vehicle_id: this.maintenance?.vehicle_id,
-          vehicle_name: this.maintenance?.vehicle_name,
-          maintenance_date: this.maintenanceForm.value.maintenance_date,
-        }
-        this.close.emit(updatedData);
-        /*else {
-        this.maintenanceService.createMaintenance(maintenanceData).subscribe({
-          next: () => {
-            alert('Maintenance Record Created Successfully')
-            this.close.emit(true)
-          },
-          error: (err) => console.error('Error while creating maintenance record: ', err)
-        })
-      } */
+        maintenance_date: this.maintenanceForm.value.maintenance_date,
+      }
+      this.close.emit(updatedData);
     }
   }
   closeModal(): void{

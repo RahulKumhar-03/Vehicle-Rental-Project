@@ -59,14 +59,6 @@ async def new_booking(booking: BookingCreate, currentUser: str = Depends(get_cur
         raise HTTPException(status_code=403, detail="Only customers's can rent vehicles")
     
     vehicle = await vehicle_collection.find_one({"_id": ObjectId(booking.vehicle_id)})
-    if not vehicle or vehicle.get("status") != "available":
-        notification.notify(
-            title='Booking Alert',
-            message=f"{booking.vehicle_name} not available for selected dates {booking.start_date}",
-            app_name="main",
-            timeout=5
-        )
-        raise HTTPException(status_code = 400, detail="Vehicle not available for booking")
 
     try:
         start_date = parse_date(booking.start_date)
@@ -189,10 +181,10 @@ async def delete_booking(booking_id: str, currentUser: User = Depends(get_curren
     if result.deleted_count == 0:
         raise HTTPException(status_code=404, detail="No Booking Record Found!")
 
-    await vehicle_collection.update_one(
-        {"_id":ObjectId(booking["vehicle_id"])},
-        {"$set": { "status":"available" }}
-    )
+    # await vehicle_collection.update_one(
+    #     {"_id":ObjectId(booking["vehicle_id"])},
+    #     {"$set": { "status":"available" }}
+    # )
     return {"message":"Booking Deleted Successfully"}
 
 

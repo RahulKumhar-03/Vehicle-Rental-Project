@@ -21,7 +21,7 @@ async def create_vehicle(vehicle: VehicleCreate, currentUser: User = Depends(get
         raise HTTPException(status_code=403, detail="Management Privileges allowed for admin only")
 
     vehicle_data = vehicle.dict()
-    vehicle_data["status"] = "available"
+    # vehicle_data["status"] = "available"
 
     result = await vehicle_collection.insert_one(vehicle_data)
     vehicle_data["id"] = str(result.inserted_id)

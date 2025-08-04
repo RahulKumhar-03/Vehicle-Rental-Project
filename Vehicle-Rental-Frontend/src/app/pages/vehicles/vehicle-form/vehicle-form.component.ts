@@ -72,7 +72,7 @@ export class VehicleFormComponent {
         description: this.vehicleForm.value.description,
         range: this.vehicleForm.value.range,
         location: this.vehicleForm.value.location,
-        status: this.vehicleForm.value.status
+        //status: this.vehicleForm.value.status
       }
       if(this.isEditMode && this.vehicle?.id){
         const updateData = {
@@ -85,7 +85,7 @@ export class VehicleFormComponent {
           description: this.vehicleForm.value.description || null,
           range: this.vehicleForm.value.range || null,
           location: this.vehicleForm.value.location,
-          status: this.vehicleForm.value.status
+          //status: this.vehicleForm.value.status
         }
         this.vehicleService.updateVehicle(this.vehicle.id, updateData).subscribe({
           next: () => {

@@ -15,7 +15,7 @@ export interface Vehicle{
     license_plate_no: string
     location: string
     description?: string
-    status: string
+    //status: string
     imageUrl?: string
     range?: number
     gearType?: "automatic" | "manual"

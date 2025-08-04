@@ -30,7 +30,7 @@ async def init_db_indexes():
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(maintenance_check_alerts, 'interval', days=1)
-scheduler.add_job(update_vehicle_status, 'interval', days=1)
+#scheduler.add_job(update_vehicle_status, 'interval', days=1)
 scheduler.start()
 
 @app.on_event("startup")
