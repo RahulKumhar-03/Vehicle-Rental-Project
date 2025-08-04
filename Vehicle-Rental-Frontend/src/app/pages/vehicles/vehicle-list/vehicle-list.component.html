@@ -8,48 +8,34 @@
     </button>
   </div>
 
-  <div class="justify-items-center">
+  <div class="justify-items-center searchBar py-2">
         <div class="space-x-3">
             <mat-form-field>
                 <mat-label>Start date</mat-label>
                 <input matInput [matDatepicker]="startPicker" [(ngModel)]="startDate" [min]="currentDate" />
-                <mat-datepicker-toggle
-                matIconSuffix
-                [for]="startPicker"
-                ></mat-datepicker-toggle>
+                <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
                 <mat-datepicker #startPicker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>End date</mat-label>
                 <input matInput [matDatepicker]="endPicker" [(ngModel)]="endDate" [min]="currentDate" />
-                <mat-datepicker-toggle
-                matIconSuffix
-                [for]="endPicker"
-                ></mat-datepicker-toggle>
+                <mat-datepicker-toggle matIconSuffix [for]="endPicker"></mat-datepicker-toggle>
                 <mat-datepicker #endPicker></mat-datepicker>
             </mat-form-field>
 
             <mat-form-field>
                 <mat-label>Car Type</mat-label>
-                <mat-select>
-                <mat-option
-                    *ngFor="let carType of carTypes"
-                    [value]="carType.value"
-                    >{{ carType.viewValue }}</mat-option
-                >
+                <mat-select [(value)]="selectedType" (selectionChange)="filterByType()">
+                  <mat-option *ngFor="let carType of carTypes" [value]="carType.value">{{ carType.viewValue }}</mat-option>
                 </mat-select>
             </mat-form-field> 
         </div>
-    </div>
-    <div
-      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10" *ngIf="!authService.isAdmin()"
-    >
-      <div
-        class="rounded-lg border-8 border-gray-600 p-2"
-        *ngFor="let vehicle of vehicles"
-      >
-        <h3 class="text-xl font-semibold px-4 pt-1 pb-2">
+  </div>
+
+  <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-10 lg:ml-10" *ngIf="!authService.isAdmin() && filteredVehicles.length == 0">
+    <div class="rounded-lg border-8 border-gray-600 p-4" *ngFor="let vehicle of vehicles">
+        <h3 class="px-4 pt-1 pb-2" style="font-weight: bold; font-size: large;">
           {{ vehicle.model }}
         </h3>
         <div class="flex justify-evenly space-x-1">
@@ -88,28 +74,56 @@
           >
             Book Now
           </button>
-          <div *ngIf="authService.isAdmin()" class="space-x-4">
-            <button
-              class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-4 rounded-full"
-              (click)="openVehicleModal(vehicle)"
-            >
-              Edit
-            </button>
-            <button
-              (click)="deleteVehicle(vehicle.id)"
-              class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
-            >
-              Delete
-            </button>
-          </div>
         </div>
       </div>
-    </div>
+  </div>
 
-    <div
-      class="mx-10 bg-gray-400 rounded-lg mt-12 overflow-x-auto overflow-y-auto"
-      *ngIf="vehicles.length > 0 && authService.isAdmin()"
-    >
+  <div class="grid grid-cols-1 sm:grid-cols-1 lg:grid-cols-2 gap-10 lg:ml-10" *ngIf="!authService.isAdmin() && filteredVehicles.length > 0">
+    <div class="rounded-lg border-8 border-gray-600 p-4" *ngFor="let vehicle of filteredVehicles">
+        <h3 class="px-4 pt-1 pb-2" style="font-weight: bold; font-size: large;">
+          {{ vehicle.model }}
+        </h3>
+        <div class="flex justify-evenly space-x-1">
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.type }}
+          </p>
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.gearType }}
+          </p>
+          <p class="border rounded-full border-gray-100 text-sm px-3 py-1">
+            {{ vehicle.location }}
+          </p>
+        </div>
+        <img
+          [src]="vehicle.imageUrl"
+          alt="Car image"
+          class="w-full h-52 object-cover pt-2"
+        />
+        <p class="text-xs px-3 pt-2" *ngIf="vehicle.description">
+          {{ vehicle.description }}
+        </p>
+        <div class="flex">
+          <p class="text-2xl font-bold pl-4">{{ vehicle.rental_rate }}</p>
+          <span class="text-lg text-gray-300 pt-1">.00 Rs/DAY</span>
+        </div>
+        <div class="flex">
+          <p class="text-2xl font-bold pl-4 pr-1">{{ vehicle.range }}</p>
+          <span class="text-lg text-gray-300 pt-1">KM PER RENTAL</span>
+        </div>
+
+        <div class="flex justify-evenly">
+          <button
+            class="mt-2 border border-gray-600 hover:text-black hover:bg-white py-2 px-3 rounded-full"
+            (click)="openBookingModal(vehicle)"
+            *ngIf="authService.isCustomer()"
+          >
+            Book Now
+          </button>
+        </div>
+      </div>
+  </div> 
+
+  <div class="mx-10 bg-gray-400 rounded-lg mt-12 overflow-x-auto overflow-y-auto" *ngIf="vehicles.length > 0 && authService.isAdmin()">
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="vehicle_name">
           <th mat-header-cell *matHeaderCellDef>Model</th>
@@ -187,7 +201,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       </table>
-    </div>
+  </div>
 
     <app-booking-form
       *ngIf="bookingModalOpened && selectedVehicle"

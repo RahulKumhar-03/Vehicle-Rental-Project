@@ -32,6 +32,7 @@ export class VehicleListComponent implements OnInit {
   selectedVehicle: Vehicle | null = null
 
   vehicles: Vehicle[] = []
+  filteredVehicles: Vehicle[] = []
 
   currentDate: string = new Date().toISOString()
 
@@ -40,14 +41,16 @@ export class VehicleListComponent implements OnInit {
 
   startDate: Date | null = null
   endDate: Date | null = null
+  selectedType: string = 'None'
 
   carTypes: CarType[] = [
-    {value: 'Sports-0', viewValue: 'Sports'},
-    {value: 'Sedan-1', viewValue: 'Sedan'},
-    {value: 'Hatchback-2', viewValue: 'Hatchback'},
-    {value: 'SUV-3', viewValue: 'SUV'},
-    {value: 'Off-roader-4', viewValue: 'Off-Roader'},
-    {value: 'Convertible-5', viewValue: 'Convertible'},
+    {value:'None', viewValue:'Select Car Type'},
+    {value: 'Sports', viewValue: 'Sports'},
+    {value: 'Sedan', viewValue: 'Sedan'},
+    {value: 'Hatchback', viewValue: 'Hatchback'},
+    {value: 'SUV', viewValue: 'SUV'},
+    {value: 'Off-roader', viewValue: 'Off-Roader'},
+    {value: 'Convertible', viewValue: 'Convertible'},
   ]
 
   constructor( 
@@ -61,6 +64,7 @@ export class VehicleListComponent implements OnInit {
   ngOnInit():void{
     this.loadVehicles();
   }
+
   loadVehicles():void{
     this.vehicleService.getVehicles().subscribe({
       next: (vehicles) => {
@@ -72,6 +76,12 @@ export class VehicleListComponent implements OnInit {
         this.vehicles = []
       }
     })
+  }
+  
+  filterByType():void{
+    if(this.selectedType){
+      this.filteredVehicles = this.vehicles.filter(vehicle => this.selectedType.toLowerCase() === vehicle.type.toLowerCase())
+    }
   }
 
   openBookingModal(vehicle: Vehicle):void{

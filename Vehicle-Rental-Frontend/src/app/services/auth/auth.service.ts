@@ -44,26 +44,19 @@ export class AuthService {
     this.router.navigate(["/home"])
   }
 
-  // setCurrentUser(user: User): void{
-  //   localStorage.setItem(this.user, JSON.stringify(user));
-  // }
-
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }
 
   getCurrentUser(): User{
-    // return JSON.parse(localStorage.getItem(this.user) || '{}');
     if (this.currentUserCache) {
       return this.currentUserCache;
     }
     
-    // If cache is empty but token exists, decode user from token
     const token = this.getToken();
     if (token) {
       try {
         const payload = JSON.parse(atob(token.split('.')[1]));
-        // You'll need to store user info in JWT payload during login
         return payload.user || {} as User;
       } catch (error) {
         console.error('Error decoding token:', error);

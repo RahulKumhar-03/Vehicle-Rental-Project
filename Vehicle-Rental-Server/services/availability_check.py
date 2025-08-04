@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from config.database import vehicle_collection, booking_collection
 from typing import List, Optional
 from models.vehicle import Vehicle
@@ -18,22 +18,24 @@ async def check_availability(start_date: Optional[datetime] = None, end_date: Op
         if start_date and end_date:
             if end_date <= start_date:
                 continue
-            conflicting_bookings = await booking_collection.find({
+            
+            conflicting_bookings = await booking_collection.find_one({
                 "vehicle_id": str(vehicle["_id"]),
-                "$or":[
+                "$and":[
                     {"start_date": {"$lte": end_date}, "end_date":{"$gte": start_date}},
                 ]
-            }).to_list(None)
-            if len(conflicting_bookings) == 0:
+            })
+            if not conflicting_bookings:
                 vehicle["id"] = str(vehicle["_id"])
                 available_vehicles.append(Vehicle(**vehicle))
         else:
-            conflicting_bookings = await booking_collection.find({
+            conflicting_bookings = await booking_collection.find_one({
                 "vehicle_id": str(vehicle["_id"]),
                 "start_date": {"$lte": current_date},
                 "end_date": {"$gte": current_date}
-            }).to_list(None)
-            if len(conflicting_bookings) == 0:
+            })
+            if not conflicting_bookings:
                 vehicle["id"] = str(vehicle["_id"])
                 available_vehicles.append(Vehicle(**vehicle))
+
     return available_vehicles
