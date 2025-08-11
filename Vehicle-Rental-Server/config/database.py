@@ -6,6 +6,6 @@ client = AsyncIOMotorClient(settings.database_url)
 db = client.vehicle_rental
 
 user_collection = db.users
-vehicle_collection = db.vehicles
-booking_collection = db.bookings
+vehicle_collection = db.rental_vehicles
+booking_collection = db.vehicle_bookings
 maintenance_collection = db.vehicle_maintenance

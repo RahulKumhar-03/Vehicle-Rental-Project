@@ -27,7 +27,7 @@ export class CreateMaintenanceModalComponent {
       const maintenanceData = {
         vehicle_id: this.vehicle.id!,
         vehicle_name: this.vehicle.model,
-        maintenance_date: this.maintenanceForm.value.maintenance_date,
+        maintenance_date: new Date(this.maintenanceForm.value.maintenance_date).toISOString(),
       }
       this.close.emit(maintenanceData);
     }

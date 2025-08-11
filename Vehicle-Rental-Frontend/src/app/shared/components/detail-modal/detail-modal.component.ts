@@ -5,7 +5,7 @@ import {MatDialogRef, MAT_DIALOG_DATA, MatDialogModule} from '@angular/material/
 @Component({
   selector: 'app-detail-modal',
   standalone: true,
-  imports: [CommonModule, DetailModalComponent, MatButtonModule, MatDialogModule],
+  imports: [CommonModule, MatButtonModule, MatDialogModule],
   templateUrl: './detail-modal.component.html',
   styleUrls: ['./detail-modal.component.css']
 })

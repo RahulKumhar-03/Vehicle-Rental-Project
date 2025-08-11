@@ -8,7 +8,7 @@
     </button>
   </div>
 
-  <div class="justify-items-center searchBar py-2">
+  <div class="justify-items-center searchBar py-2" *ngIf="authService.isCustomer()">
         <div class="space-x-3">
             <mat-form-field>
                 <mat-label>Start date</mat-label>

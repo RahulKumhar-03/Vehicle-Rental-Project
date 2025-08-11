@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -8,15 +8,17 @@ import { Router } from '@angular/router';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table'
 import { DetailModalComponent } from 'src/app/shared/components/detail-modal/detail-modal.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-booking-list',
   standalone: true,
-  imports: [CommonModule, EditBookingModalComponent, MatTableModule, MatDialogModule],
+  imports: [CommonModule, EditBookingModalComponent, MatTableModule, MatDialogModule, MatPaginatorModule],
   templateUrl: './booking-list.component.html',
   styleUrls: ['./booking-list.component.css']
 })
 export class BookingListComponent implements OnInit {
+  @ViewChild('paginator') paginator!: MatPaginator;
   bookings: Booking[] = []
   isLoading: boolean = false
   bookingModalOpened: boolean = false
@@ -33,7 +35,7 @@ export class BookingListComponent implements OnInit {
     public dialog: MatDialog,
   ) {}
   
-  ngOnInit(): void{
+  ngOnInit(){
     this.setDisplayedColumns();
     this.loadBookings();
   }
@@ -57,8 +59,8 @@ export class BookingListComponent implements OnInit {
           const currentUser = this.authService.getCurrentUser().id!;
           this.bookings = bookings.filter(booking => booking.user_id === currentUser)
         }
-        console.log('Filter Bookings: ',this.bookings)
-        this.dataSource.data = this.bookings;
+        this.dataSource.data = bookings
+        this.dataSource.paginator = this.paginator;
         this.isLoading = false
       },
       error: (err) => {

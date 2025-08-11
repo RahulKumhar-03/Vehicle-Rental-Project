@@ -7,7 +7,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth/auth.service';
 import { UserService } from '../services/user/user.service';
 
-
 @NgModule({
   declarations: [],
   imports: [
@@ -15,7 +14,7 @@ import { UserService } from '../services/user/user.service';
     NavBarComponent,
     FooterComponent,
     LoginRegisterComponent,
-    HttpClientModule
+    HttpClientModule,
   ],
   exports: [
     NavBarComponent,

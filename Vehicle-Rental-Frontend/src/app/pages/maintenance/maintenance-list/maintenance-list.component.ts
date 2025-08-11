@@ -21,7 +21,7 @@ export class MaintenanceListComponent implements OnInit {
   isLoading: boolean = false
   maintenanceModalOpened: boolean = false
   selectedMaintenance: Maintenance | null = null
-  displayedColumns: string[] = ['vehicle_name','maintenance_date', 'maintenance_status','action'];
+  displayedColumns: string[] = ['vehicle_name','maintenance_date','action'];
   dataSource = new MatTableDataSource<Maintenance>();
 
   constructor(

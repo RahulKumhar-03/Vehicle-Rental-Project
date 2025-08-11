@@ -1,9 +1,9 @@
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto overscroll-contain">
   <div class="vehicle-form-container max-w-md mx-auto p-6 bg-white shadow-lg rounded mt-28">
-    <div class="flex space-x-4 justify-center pb-2">
+    <div class="flex space-x-4 pb-2 justify-center">
       <img width="40" height="30" src="https://img.icons8.com/ios/80/tesla-model-3.png" alt="tesla-model-3" class=""/>
-      <h2 class="text-2xl font-bold text-gray-800 mt-1">
-        Add Vehicle
+      <h2 class="text-2xl font-bold text-gray-900 pt-3">
+        {{ isEditMode ? 'Edit Vehicle' : 'Add Vehicle' }}
       </h2>
     </div>
     <div class="text-sm text-gray-400 font-semibold py-2">

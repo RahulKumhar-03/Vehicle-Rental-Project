@@ -25,7 +25,6 @@ export class MaintenanceService {
   createMaintenance(maintenance: {
     vehicle_id: string;
     vehicle_name: string;
-    description: string;
     maintenance_date: string;
   }): Observable<Maintenance>{
     const token = this.getToken();

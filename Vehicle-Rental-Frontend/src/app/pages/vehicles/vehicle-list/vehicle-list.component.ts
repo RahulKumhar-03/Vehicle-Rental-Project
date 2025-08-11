@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Vehicle } from 'src/Schemas/interfaces';
+import { Maintenance, Vehicle } from 'src/Schemas/interfaces';
 import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
@@ -8,13 +8,13 @@ import { BookingFormComponent } from '../../bookings/booking-form/booking-form.c
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CreateMaintenanceModalComponent } from '../../maintenance/create-maintenance-modal/create-maintenance-modal.component';
-import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
 import { Router } from '@angular/router';
 import {MatSelectModule} from '@angular/material/select'
 import {MatInputModule} from '@angular/material/input'
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
+import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
 
 @Component({
   selector: 'app-vehicle-list',
@@ -50,7 +50,7 @@ export class VehicleListComponent implements OnInit {
     {value: 'Hatchback', viewValue: 'Hatchback'},
     {value: 'SUV', viewValue: 'SUV'},
     {value: 'Off-roader', viewValue: 'Off-Roader'},
-    {value: 'Convertible', viewValue: 'Convertible'},
+    {value: 'Coupe', viewValue: 'Coupe'},
   ]
 
   constructor( 
@@ -139,9 +139,9 @@ export class VehicleListComponent implements OnInit {
     this.maintenanceModalOpened = true
   }
 
-  closeCreateMaintenanceModal(maintenanceData: any){
+  closeCreateMaintenanceModal(maintenanceData: Maintenance){
     if(maintenanceData){
-      this.maintenanceService.createMaintenance(maintenanceData as any).subscribe({
+      this.maintenanceService.createMaintenance(maintenanceData).subscribe({
         next: (response) => {
           alert(`${maintenanceData.vehicle_name} maintenance scheduled on ${maintenanceData.maintenance_date}.`)
           this.maintenanceModalOpened = false
