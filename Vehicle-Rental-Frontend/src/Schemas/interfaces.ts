@@ -39,3 +39,8 @@ export interface Maintenance{
     vehicle_id: string
     vehicle_name: string
 }
+
+export interface CarType{
+  value: string;
+  viewValue:string;
+}

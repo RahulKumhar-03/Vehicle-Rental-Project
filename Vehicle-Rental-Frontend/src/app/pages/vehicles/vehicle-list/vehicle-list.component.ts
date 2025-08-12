@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Maintenance, Vehicle } from 'src/Schemas/interfaces';
+import { Maintenance, Vehicle, CarType } from 'src/Schemas/interfaces';
 import { VehicleService } from 'src/app/services/vehicle/vehicle.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { VehicleFormComponent } from '../vehicle-form/vehicle-form.component';
@@ -9,17 +9,18 @@ import { BookingService } from 'src/app/services/booking/booking.service';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { CreateMaintenanceModalComponent } from '../../maintenance/create-maintenance-modal/create-maintenance-modal.component';
 import { Router } from '@angular/router';
-import {MatSelectModule} from '@angular/material/select'
-import {MatInputModule} from '@angular/material/input'
-import {MatDatepickerModule} from '@angular/material/datepicker';
+import { MatSelectModule} from '@angular/material/select'
+import { MatInputModule} from '@angular/material/input'
+import { MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { FormsModule } from '@angular/forms';
 import { MaintenanceService } from 'src/app/services/maintenance/maintenance.service';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-vehicle-list',
   standalone: true,
-  imports: [CommonModule, VehicleFormComponent, BookingFormComponent, MatTableModule, CreateMaintenanceModalComponent, MatSelectModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, FormsModule],
+  imports: [CommonModule, VehicleFormComponent, BookingFormComponent, MatTableModule, CreateMaintenanceModalComponent, MatSelectModule, MatInputModule, MatNativeDateModule, MatDatepickerModule, FormsModule, MatButtonModule],
   templateUrl: './vehicle-list.component.html',
   styleUrls: ['./vehicle-list.component.css']
 })
@@ -39,8 +40,8 @@ export class VehicleListComponent implements OnInit {
   displayedColumns: string[] = ['vehicle_name','license_plate', 'rental_rate','range', 'location', 'type', 'action'];
   dataSource = new MatTableDataSource<Vehicle>();
 
-  startDate: Date | null = null
-  endDate: Date | null = null
+  startDate: string = ''
+  endDate: string = ''
   selectedType: string = 'None'
 
   carTypes: CarType[] = [
@@ -155,9 +156,28 @@ export class VehicleListComponent implements OnInit {
       this.maintenanceModalOpened = false
     }
   }
+  applyCombinedSearch(){
+    const start_date = new Date(this.startDate).toISOString();
+    const end_date = new Date(this.endDate).toISOString();
+    console.log(`Start Date: ${start_date}, End Date: ${end_date}, Selected Type: ${this.selectedType}`);
+    if(start_date >= end_date){
+      alert('Start date must be before end date.');
+      return;
+    }
+    
+    if(start_date && end_date){
+      this.vehicleService.availableVehicles(start_date, end_date, this.selectedType).subscribe({
+        next: (vehicles) => {
+          console.log(vehicles);
+          this.filteredVehicles = vehicles;
+        },
+        error: (err) => {
+          alert('No vehicles available for the selected dates and type!! Please try again');
+          console.error('Error fetching available vehicles: ', err);
+          window.location.reload()
+        }
+      })
+    }
+  }
 }
 
-export interface CarType{
-  value: string;
-  viewValue:string;
-}

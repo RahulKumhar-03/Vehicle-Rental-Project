@@ -58,4 +58,13 @@ export class VehicleService {
       headers: new HttpHeaders({ Authorization: `Bearer ${token}` }),
     });
   }
+
+  availableVehicles(startDate: string, endDate: string, vehicleType: string): Observable<Vehicle[]> {
+    const params = new HttpParams()
+      .set('start_date', startDate)
+      .set('end_date', endDate)
+      .set('vehicle_type', vehicleType);
+
+    return this.http.get<Vehicle[]>(`${this.apiUrl}/available`, { params });
+  }
 }

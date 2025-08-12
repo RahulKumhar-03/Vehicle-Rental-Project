@@ -9,7 +9,7 @@ from services.availability_check import check_availability
 
 router = APIRouter()
 
-@router.get("/", response_model=List[Vehicle]) #Read all the vehicles in the database
+@router.get("/", response_model=List[Vehicle])
 async def getVehicles():
     vehicles = await vehicle_collection.find().to_list(None)
     return [Vehicle(**{**v, "id": str(v["_id"])}) for v in vehicles]
@@ -21,7 +21,6 @@ async def create_vehicle(vehicle: VehicleCreate, currentUser: User = Depends(get
         raise HTTPException(status_code=403, detail="Management Privileges allowed for admin only")
 
     vehicle_data = vehicle.dict()
-    # vehicle_data["status"] = "available"
 
     result = await vehicle_collection.insert_one(vehicle_data)
     vehicle_data["id"] = str(result.inserted_id)
@@ -53,7 +52,7 @@ async def deleteVehicle(vehicle_id: str, currentUser: User = Depends(get_current
     return {"message": "Vehicle deleted"}
 
 @router.get('/available', response_model=List[Vehicle])
-async def get_available_vehicle(start_date: Optional[datetime] = Query(...), end_date: Optional[datetime] = Query(...), vehicle_type: Optional[str] = Query(None)):
+async def get_available_vehicle(start_date: Optional[str] = Query(...), end_date: Optional[str] = Query(...), vehicle_type: Optional[str] = Query(None)):
     return await check_availability(start_date, end_date, vehicle_type)
 
 @router.get("/{vehicle_id}", response_model=Vehicle)

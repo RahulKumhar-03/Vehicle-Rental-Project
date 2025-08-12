@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BookingService } from 'src/app/services/booking/booking.service';
 import { AuthService } from 'src/app/services/auth/auth.service';

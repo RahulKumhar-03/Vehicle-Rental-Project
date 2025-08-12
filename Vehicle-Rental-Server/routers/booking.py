@@ -5,16 +5,10 @@ from routers.auth import get_current_user, User
 from typing import List
 from config.database import booking_collection, vehicle_collection, user_collection, maintenance_collection
 from plyer import notification
-from datetime import datetime, timezone
+from datetime import datetime
+from services.parse_date import parse_date
 
 router = APIRouter()
-
-def parse_date(date_str: str) -> datetime:
-    try: 
-        dt = datetime.fromisoformat(date_str.replace("Z","+00:00"))
-        return dt
-    except ValueError as e:
-        e
 
 @router.get("/", response_model=List[Booking]) 
 async def get_all_bookings(currentUser: User = Depends(get_current_user)) -> List[Booking]:
