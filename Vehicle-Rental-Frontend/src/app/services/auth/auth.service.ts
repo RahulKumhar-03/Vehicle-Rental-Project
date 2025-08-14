@@ -9,8 +9,7 @@ import { User } from 'src/Schemas/interfaces'
   providedIn: 'root'
 })
 export class AuthService {
-  private tokenKey = 'access_token'
-  private user = 'current_user'
+  private tokenKey = 'access_token' 
   private apiUrl = `${apiUrl}/auth`;
 
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated()); 

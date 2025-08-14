@@ -20,7 +20,7 @@ import { UserService } from '../services/user/user.service';
     NavBarComponent,
     FooterComponent,
     LoginRegisterComponent,
-    HttpClientModule
+    HttpClientModule,
   ], 
   providers: [
     AuthService, 
