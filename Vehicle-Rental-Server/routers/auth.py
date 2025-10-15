@@ -24,7 +24,9 @@ def hashing_pwd(password: str) -> str:
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode('utf-8')
 
 def check_password(plain_password: str, hashed_password: str) -> bool:
-    return bcrypt.checkpw(plain_password.encode(),hashed_password.encode())
+    password = bcrypt.checkpw(plain_password.encode(),hashed_password.encode())
+    print('Password: ',password)
+    return password
 
 def create_jwt_token(data: dict, user_data: dict = None):
     to_encode = data.copy()
@@ -54,6 +56,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 @router.post("/register", response_model=RegisterResponse)
 async def register_user(user: UserCreate):
     existing_user = await user_collection.find_one({"email":user.email})
+
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered! Please login.")
     hashed_password = hashing_pwd(user.password)
