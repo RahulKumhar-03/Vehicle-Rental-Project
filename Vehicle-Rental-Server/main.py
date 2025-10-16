@@ -3,6 +3,7 @@ from routers import auth, vehicle, booking, maintenance
 from routers.auth import security
 from config.database import user_collection, booking_collection, maintenance_collection, vehicle_collection
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.requests import Request
 
 
 app = FastAPI()
@@ -34,3 +35,7 @@ async def start_up_event():
 @app.on_event("shutdown")
 async def shutdown_event():
     print("Shutting down the fastapi application")
+
+async def handler(request: Request) -> any:
+    response = await app(request.scope, request.receive, request.send)
+    return response
