@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError} from 'rxjs';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
-import { apiUrl } from 'src/environments/environment.development';
+import { apiUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'

@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { apiUrl } from 'src/environments/environment.development';
+import { apiUrl } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Maintenance } from 'src/Schemas/interfaces';
 
