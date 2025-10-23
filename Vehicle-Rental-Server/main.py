@@ -9,7 +9,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  
+    allow_origins=["https://skyline-rentals.onrender.com"],  
     allow_credentials=True,
     allow_methods=["GET", "POST", "DELETE", "PUT", "OPTIONS"], 
     allow_headers=["*"],
