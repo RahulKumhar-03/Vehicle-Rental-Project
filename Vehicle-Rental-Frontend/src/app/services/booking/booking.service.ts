@@ -2,13 +2,12 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable, throwError} from 'rxjs';
 import { Booking, Vehicle } from 'src/Schemas/interfaces';
-import { apiUrl } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BookingService {
-  private apiUrl = `${apiUrl}`;
+  private apiUrl = 'https://vehicle-rental-project.onrender.com';
 
   constructor(private http: HttpClient) { }
 

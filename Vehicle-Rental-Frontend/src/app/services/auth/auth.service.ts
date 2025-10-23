@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { apiUrl } from 'src/environments/environment';
 import {HttpClient} from '@angular/common/http';
 import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
@@ -10,7 +9,7 @@ import { User } from 'src/Schemas/interfaces'
 })
 export class AuthService {
   private tokenKey = 'access_token' 
-  private apiUrl = `${apiUrl}/auth`;
+  private apiUrl = 'https://vehicle-rental-project.onrender.com/auth';
 
   private loggedIn = new BehaviorSubject<boolean>(this.isAuthenticated()); 
   loggedInStatus = this.loggedIn.asObservable();

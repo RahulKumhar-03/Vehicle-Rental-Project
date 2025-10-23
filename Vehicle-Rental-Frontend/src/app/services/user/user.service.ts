@@ -2,14 +2,13 @@ import { Injectable } from '@angular/core';
 import { User } from 'src/Schemas/interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { apiUrl } from 'src/environments/environment';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private api = `${apiUrl}/auth`;
+  private api = 'https://vehicle-rental-project.onrender.com/auth';
   private token = 'access_token'
 
   constructor(public http: HttpClient) { }

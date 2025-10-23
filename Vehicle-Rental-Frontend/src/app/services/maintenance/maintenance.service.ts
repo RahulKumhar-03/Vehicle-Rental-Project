@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { apiUrl } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { Maintenance } from 'src/Schemas/interfaces';
 
@@ -8,7 +7,7 @@ import { Maintenance } from 'src/Schemas/interfaces';
   providedIn: 'root'
 })
 export class MaintenanceService {
-  private apiUrl = `${apiUrl}/maintenance`;
+  private apiUrl = 'https://vehicle-rental-project.onrender.com/maintenance';
 
   constructor(private http: HttpClient) { }
 

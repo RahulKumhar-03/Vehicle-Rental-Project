@@ -1,13 +1,12 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { apiUrl } from 'src/environments/environment';
 import { Vehicle } from 'src/Schemas/interfaces';
 @Injectable({
   providedIn: 'root'
 })
 export class VehicleService {
-  private apiUrl = `${apiUrl}/vehicle`
+  private apiUrl = 'https://vehicle-rental-project.onrender.com/vehicle';
 
   constructor(private http: HttpClient) { }
 
